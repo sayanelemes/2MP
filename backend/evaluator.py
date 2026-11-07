@@ -115,5 +115,7 @@ def _mock(ctx):
             "reason": "Заглушка: ответ выбран детерминированно, модель не вызывалась.",
             "evidence": [] if answer == "NA" else [{"id": u["id"], "quote": u["text"][:200], "verified": True}],
             "checked_range": {"from": utts[0]["id"], "to": utts[-1]["id"]},
+            "suggestion": "" if answer in ("yes", "NA") or c.get("is_critical") or (c["type"] == "scale" and answer == max(s["value"] for s in c["steps"]))
+                          else "Подскажите, остались ли у вас ещё вопросы?",
         })
     return results

@@ -22,14 +22,29 @@
     return m;
   }
 
+  // Подсказка «как надо было»: только пока критерий выполнен не полностью по итоговому ответу (после апелляции с «Да» исчезает).
+  const coachOf = (r) => (r.suggestion && !r.is_critical && ["x", "m"].includes(CQA.barClass(r)) ? r.suggestion : "");
+  function coachAnchors() {
+    const out = {}, lastOp = conv.transcript.map((u, i) => (u.speaker === "operator" ? i + 1 : 0)).filter(Boolean).pop() || conv.transcript.length;
+    (ev && ev.status === "done" ? ev.results : []).forEach((r) => {
+      if (!coachOf(r)) return;
+      const ev1 = Math.max(0, ...(r.evidence || []).map((e) => turnNo(e.id)));
+      const n = ev1 || (r.checked_range ? turnNo(r.checked_range.to) : 0) || lastOp;
+      (out[n] = out[n] || []).push(r);
+    });
+    return out;
+  }
+  const coachHtml = (r) => `<li class="coach" id="coach-${r.criterion_id}" role="note" aria-label="Подсказка: как надо было сказать"><div class="coach__box"><div class="coach__head">💬 Надо было сказать · ${E(r.title)}</div><p class="coach__text">«${E(r.suggestion)}»</p></div></li>`;
+
   function transcriptHtml() {
-    const marks = marksFor();
+    const marks = marksFor(), coach = coachAnchors();
     return conv.transcript.map((u, i) => {
       const n = i + 1, time = stamp(u.t);
-      if (u.speaker === "system") return `<li class="turn turn--system" id="t-${n}" style="--i:${i}"><span class="turn__sys">${ICON("headset")}${E(u.text)}<time>${time}</time></span></li>`;
+      const after = (coach[n] || []).map(coachHtml).join("");
+      if (u.speaker === "system") return `<li class="turn turn--system" id="t-${n}" style="--i:${i}"><span class="turn__sys">${ICON("headset")}${E(u.text)}<time>${time}</time></span></li>` + after;
       const [who, icon, ac] = WHO[u.speaker] || ["Реплика", "user", ""];
       const clamp = u.speaker === "bot" && u.text.length > 220 ? " is-clamped" : "";
-      return `<li class="turn turn--${u.speaker}" id="t-${n}" style="--i:${i}"><span class="avatar${ac}">${ICON(icon)}</span><div class="turn__body"><div class="turn__meta"><a class="turn__no" href="#t-${n}">#${n}</a><span class="turn__who">${who}</span><time class="turn__time">${time}</time>${CQA.isCall(conv) && u.t !== null && u.t !== undefined ? `<a class="play-chip" href="#t-${n}" data-at="${u.t}" aria-label="Слушать с ${time}">${ICON("play")}</a>` : ""}</div><p class="turn__text${clamp}">${E(u.text)}</p>${marks[n] ? `<div class="turn__marks">${marks[n].join("")}</div>` : ""}</div></li>`;
+      return `<li class="turn turn--${u.speaker}" id="t-${n}" style="--i:${i}"><span class="avatar${ac}">${ICON(icon)}</span><div class="turn__body"><div class="turn__meta"><a class="turn__no" href="#t-${n}">#${n}</a><span class="turn__who">${who}</span><time class="turn__time">${time}</time>${CQA.isCall(conv) && u.t !== null && u.t !== undefined ? `<a class="play-chip" href="#t-${n}" data-at="${u.t}" aria-label="Слушать с ${time}">${ICON("play")}</a>` : ""}</div><p class="turn__text${clamp}">${E(u.text)}</p>${marks[n] ? `<div class="turn__marks">${marks[n].join("")}</div>` : ""}</div></li>` + after;
     }).join("");
   }
 
@@ -60,11 +75,12 @@
     const kind = r.is_critical ? "violation" : r.final_answer === "no" ? "violation" : "support";
     const evidence = (r.evidence || []).map((e) => { const n = turnNo(e.id); return `<a class="evidence__item evidence__item--${kind}" href="#t-${n}"><span class="turn-ref">#${n}</span><span><span class="evidence__quote">${E(e.quote)}</span>${e.verified === false ? '<span class="evidence__note">цитата не найдена в тексте</span>' : ""}</span></a>`; }).join("");
     const box = appeals.map((a) => `<div class="appeal-box"><div class="appeal-box__head">${ICON("scale", "icon--sm")}Апелляция оператора<span class="tiny">${dt(a.created_at)}</span></div><p>«${E(a.comment)}»</p>${a.status === "resolved" ? `<div class="appeal-box__head appeal-box__head--ok">${ICON("check-circle", "icon--sm")}Проверяющий: ${a.decision === "changed" ? "оценка изменена" : "оценка подтверждена"}<span class="tiny">${dt(a.decided_at)}</span></div><p>${E(a.decision_reason || "")}</p>` : `<div class="appeal-box__head">${ICON("clock", "icon--sm")}Ждёт решения проверяющего</div>`}</div>`).join("");
+    const coach = coachOf(r) ? `<div class="crit__coach"><b>💬 Надо было сказать</b><span>«${E(r.suggestion)}»</span><button class="btn btn--ghost btn--sm" type="button" data-coach="${r.criterion_id}">Показать в разговоре</button></div>` : "";
     const naBox = r.final_answer === "NA" && c.na_condition ? `<div class="crit__na">${ICON("info", "icon--sm")}<span><b>Условие N/A:</b> ${E(c.na_condition)}</span></div>` : "";
     const foot = r.is_critical || r.final_answer === "NA" || !ev.id ? "" : `<div class="crit__foot"><span class="spacer"></span><a class="btn btn--ghost btn--sm" href="#appeal-modal" data-crit="${r.criterion_id}">${ICON("scale")}Оспорить</a></div>`;
     return `<article class="card spot crit crit--${critClass(r)}" id="c-${code}"><span class="crit__bar" aria-hidden="true"></span>
       <div class="crit__head"><span class="crit__code">${code}</span><div><h3 class="crit__title">${E(r.title)}</h3><p class="crit__rule">${E((c.instruction || "").split(". ")[0])}</p></div><div class="crit__verdict">${verdict}<span class="crit__points">${pts}</span></div></div>
-      ${naBox}<p class="crit__text">${refs(r.reason || "")}</p>${evidence ? `<div class="evidence">${evidence}</div>` : ""}${box}${foot}</article>`;
+      ${naBox}<p class="crit__text">${refs(r.reason || "")}</p>${coach}${evidence ? `<div class="evidence">${evidence}</div>` : ""}${box}${foot}</article>`;
   }
 
   function panelHtml() {
@@ -205,6 +221,11 @@
     $(".transcript__body").innerHTML = transcriptHtml();
     $(".verdict-panel").innerHTML = panelHtml();
     fillModal();
+    $$("[data-coach]").forEach((b) => b.addEventListener("click", () => {
+      const el = $("#coach-" + b.dataset.coach); if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.remove("is-hl"); void el.offsetWidth; el.classList.add("is-hl");
+      setTimeout(() => el.classList.remove("is-hl"), 1300);
+    }));
     if (call) setupPlayer();
     const rep = $("[data-replay]"); if (rep) rep.hidden = true;
     if (location.hash && $(location.hash)) $(location.hash).scrollIntoView();

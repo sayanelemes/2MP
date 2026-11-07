@@ -30,7 +30,7 @@ CREATE INDEX IF NOT EXISTS evaluations_cache ON evaluations(cache_key);
 CREATE TABLE IF NOT EXISTS criterion_results(
   evaluation_id INTEGER NOT NULL REFERENCES evaluations(id), criterion_id TEXT NOT NULL,
   ai_answer TEXT, final_answer TEXT, reason TEXT, evidence_json TEXT, checked_range_json TEXT,
-  base_weight REAL, effective_weight REAL, points REAL, PRIMARY KEY(evaluation_id, criterion_id));
+  base_weight REAL, effective_weight REAL, points REAL, suggestion TEXT, PRIMARY KEY(evaluation_id, criterion_id));
 CREATE TABLE IF NOT EXISTS appeals(
   id INTEGER PRIMARY KEY, evaluation_id INTEGER NOT NULL REFERENCES evaluations(id),
   criterion_id TEXT NOT NULL, comment TEXT NOT NULL, status TEXT NOT NULL, created_by TEXT,
@@ -64,6 +64,8 @@ def init():
     with closing(connect()) as conn:
         conn.execute("PRAGMA journal_mode=WAL")
         conn.executescript(SCHEMA)
+        if "suggestion" not in {r["name"] for r in conn.execute("PRAGMA table_info(criterion_results)")}:
+            conn.execute("ALTER TABLE criterion_results ADD COLUMN suggestion TEXT")  # старые базы: колонка появилась позже
 
 
 def rows(conn, sql, args=()):
@@ -119,6 +121,7 @@ def get_evaluation(conn, evaluation_id):
                 "base_weight": r["base_weight"], "effective_weight": r["effective_weight"], "points": r["points"],
                 "reason": r["reason"], "evidence": json.loads(r["evidence_json"] or "[]"),
                 "checked_range": json.loads(r["checked_range_json"] or "null"),
+                "suggestion": r.get("suggestion") or "",
             })
     sections = []
     if results and len(results) == len(cl["criteria"]):
@@ -177,11 +180,11 @@ def save_evaluation_result(evaluation_id, results, model, prompt_version, status
                 r = by_id[pc["criterion_id"]]
                 answer = json.dumps(r["answer"])
                 conn.execute(
-                    "INSERT INTO criterion_results VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    "INSERT INTO criterion_results VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                     (evaluation_id, pc["criterion_id"], answer, answer, r.get("reason"),
                      json.dumps(r.get("evidence") or [], ensure_ascii=False),
                      json.dumps(r.get("checked_range"), ensure_ascii=False),
-                     pc["base_weight"], pc["effective_weight"], pc["points"]))
+                     pc["base_weight"], pc["effective_weight"], pc["points"], r.get("suggestion") or ""))
         total = comp["total"] if comp else None
         flag = bool(comp and comp["critical_flag"])
         conn.execute(

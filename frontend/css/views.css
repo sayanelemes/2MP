@@ -683,3 +683,13 @@ a.reason:hover { border-color: var(--amber-line); color: var(--ink); transform: 
   .stripe__pts { display: none; }
   .workspace { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Как надо было сказать: «призрак» реплики оператора, которой не было */
+.coach { display: grid; justify-items: end; padding: 0 38px 10px 0; list-style: none; }
+.coach__box { max-width: 76ch; padding: 10px 14px; border: 1.5px dashed var(--ok); border-radius: var(--r-lg) 6px var(--r-lg) var(--r-lg); background: var(--ok-bg); box-shadow: none; display: grid; gap: 4px; }
+.coach__head { font-size: var(--fs-12, 12px); color: var(--ink-3); }
+.coach__text { margin: 0; color: var(--ink); }
+.coach.is-hl .coach__box { animation: coach-hl 1.2s ease-out; }
+@keyframes coach-hl { 0%, 60% { box-shadow: 0 0 0 3px var(--ok), 0 0 24px -4px var(--ok); } 100% { box-shadow: none; } }
+.crit__coach { display: grid; gap: 8px; justify-items: start; margin-top: 10px; padding: 10px 14px; border: 1px solid var(--ok-line); border-radius: var(--r-md, 12px); background: var(--ok-bg); }
+.crit__coach b { font-size: var(--fs-12, 12px); color: var(--ink-3); font-weight: 600; }

@@ -27,6 +27,37 @@ def _answer(c, raw):
     return None
 
 
+ADVICE = re.compile(r"^(уточните|предложите|обязательно|рекомендуется|оператору следует|нужно|следует|ask|offer|make sure|should)\b",
+                    re.IGNORECASE)
+CYR, LAT, KZ_LETTERS = re.compile("[а-яёәғқңөұүһі]", re.I), re.compile("[a-z]", re.I), re.compile("[әғқңөұүһі]", re.I)
+
+
+def _plain(text):
+    return re.sub(r"[^\w ]", "", _norm(text)).strip()
+
+
+def _clean_suggestion(c, answer, raw, language, operator_texts):
+    """Готовая реплика оператора для места, где он потерял баллы. Плохая подсказка — пустая строка, оценка остаётся."""
+    text = re.sub(r"\s+", " ", str(raw or "")).strip().strip("\"«»").strip()
+    partial = answer == "no" if c["type"] == "yes_no" else (answer != "NA" and answer < max(s["value"] for s in c["steps"]))
+    if not text or c.get("is_critical") or answer == "NA" or not partial:
+        return ""
+    words = text.split()
+    if len(words) > 25 or ADVICE.match(text):
+        return ""
+    lang = (language or "").upper()
+    if lang == "EN" and (not LAT.search(text) or CYR.search(text)):
+        return ""
+    if lang in ("RU", "KZ") and not CYR.search(text):
+        return ""
+    if lang == "KZ" and len(words) > 5 and not KZ_LETTERS.search(text):
+        return ""
+    plain = _plain(text)
+    if any(plain == t or plain in t for t in operator_texts):  # повторил то, что оператор и так сказал
+        return ""
+    return text
+
+
 def strip_fence(raw_text):
     """Ответ модели без обёртки ```json ... ```."""
     return re.sub(r"^```(?:json)?\s*|\s*```$", "", (raw_text or "").strip())
@@ -46,6 +77,7 @@ def validate(raw_text, conversation, checklist):
     index = {u["id"]: i for i, u in enumerate(transcript)}
     criteria = {c["id"]: c for c in checklist["criteria"]}
     errors, by_id = [], {}
+    operator_texts = [_plain(u["text"]) for u in transcript if u["speaker"] == "operator"]
     for item in items:
         cid = item.get("criterion_id") if isinstance(item, dict) else None
         if cid not in criteria:
@@ -106,5 +138,7 @@ def validate(raw_text, conversation, checklist):
                 errors.append(f"{cid}: без evidence нужен checked_range")
 
         results.append({"criterion_id": cid, "answer": answer, "reason": str(item.get("reason") or "").strip(),
-                        "evidence": evidence, "checked_range": checked})
+                        "evidence": evidence, "checked_range": checked,
+                        "suggestion": _clean_suggestion(c, answer, item.get("suggestion"), conversation.get("language"),
+                                                        operator_texts)})
     return (results, errors) if not errors else ([], errors)
