@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3FAF6">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B2D1F'/%3E%3Cg fill='%2345F395'%3E%3Crect x='6' y='17' width='3' height='8' rx='1.5'/%3E%3Crect x='11' y='11' width='3' height='14' rx='1.5'/%3E%3Crect x='16' y='6' width='3' height='19' rx='1.5'/%3E%3Crect x='21' y='12' width='3' height='13' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
+  <title>Апелляции · CQA</title>
+  <script src="js/fx/boot.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300..800&family=Unbounded:wght@500..800&display=swap"></noscript>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+  <link rel="stylesheet" href="css/fx.css">
+</head>
+<body>
+  <!-- Иконки (inline-спрайт, чтобы работать и с file://). Использование: <svg class="icon"><use href="#i-check"/></svg> -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3.5 21l1.4-4.9A8.5 8.5 0 1 1 21 12Z"/><path d="m8.6 12.2 2.4 2.4 4.6-5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></symbol>
+    <symbol id="i-checklist" viewBox="0 0 24 24"><path d="M10 6h11M10 12h11M10 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M4 7h16"/><path d="m4 7-3 7a3.5 3.5 0 0 0 6 0L4 7ZM20 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></symbol>
+    <symbol id="i-sort-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 16a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2zM3 16a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2z"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0M12 17v5"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H8a5 5 0 1 1 1-9.9A6 6 0 0 1 20 11a4 4 0 0 1-2.5 8z"/></symbol>
+    <symbol id="i-toggle" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="16" cy="12" r="3"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24"><path d="M5 20v-4M10 20v-8M15 20V8M20 20V4"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5M9 10.8V4h6v6.8l3 3.2H6z"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/><path d="M19 3v4M17 5h4"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
+  </svg>
+  <div class="aurora" aria-hidden="true"><canvas class="aurora__canvas"></canvas><div class="aurora__fallback"></div></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="app" id="cqa-app">
+  <aside class="rail" aria-label="Навигация">
+    <a class="rail__brand" href="index.html" aria-label="CQA, на главную">
+      <span class="logo-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="rail__brand-text rail__label"><b>CQA</b><small>Freedom Broker</small></span>
+    </a>
+    <nav class="rail__nav" aria-label="Разделы">
+      <a class="rail__link" href="index.html" style="--i:0"><svg class="icon"><use href="#i-list"/></svg><span class="rail__label">Диалоги</span><span class="rail__meta">65</span></a>
+      <a class="rail__link" href="checklist.html" style="--i:1"><svg class="icon"><use href="#i-checklist"/></svg><span class="rail__label">Чек-листы</span><span class="rail__meta">v2</span></a>
+      <a class="rail__link is-active" aria-current="page" href="appeals.html" style="--i:2"><svg class="icon"><use href="#i-scale"/></svg><span class="rail__dot" aria-hidden="true"></span><span class="rail__label">Апелляции</span><span class="rail__meta rail__meta--amber">3</span></a>
+      <a class="rail__link" href="analytics.html" style="--i:3"><svg class="icon"><use href="#i-bars"/></svg><span class="rail__label">Аналитика</span></a>
+      <p class="rail__section">Для разработки</p>
+      <a class="rail__link" href="ui-kit.html" style="--i:4"><svg class="icon"><use href="#i-grid"/></svg><span class="rail__label">Компоненты</span></a>
+    </nav>
+    <div class="rail__cta"><a class="btn btn--primary" href="run.html"><svg class="icon"><use href="#i-sparkles"/></svg><span class="rail__label">Новая оценка</span></a></div>
+    <div class="rail__foot">
+      <div class="rail__dataset"><span class="live-dot" aria-hidden="true"></span><span class="rail__label"><b>Набор DEV</b><small>65 диалогов загружено</small></span></div>
+      <div class="rail__tools">
+        <button class="rail__tool" type="button" data-theme-toggle aria-label="Сменить тему" aria-pressed="false"><svg class="icon i-sun"><use href="#i-sun"/></svg><svg class="icon i-moon"><use href="#i-moon"/></svg></button>
+        <button class="rail__tool" type="button" data-rail-pin aria-label="Закрепить панель" aria-pressed="false"><svg class="icon"><use href="#i-pin"/></svg></button>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="cmdbar">
+      <nav class="cmdbar__crumbs" aria-label="Путь"><span aria-current="page">Апелляции</span></nav>
+      <label class="search cmdbar__search"><span class="sr-only">Быстрый поиск</span><svg class="icon"><use href="#i-search"/></svg><input class="input" type="search" placeholder="Найти диалог, страницу или действие" data-palette-open readonly><span class="kbd">Ctrl K</span></label>
+      <div class="seg" role="group" aria-label="Роль" data-static>
+        <a class="seg__item" aria-pressed="false" href="index.html"><svg class="icon"><use href="#i-headset"/></svg>Оператор</a>
+        <a class="seg__item is-active" aria-pressed="true" href="appeals.html"><svg class="icon"><use href="#i-shield"/></svg>Проверяющий</a>
+      </div>
+    </header>
+    <main class="page">
+      <header class="hero">
+        <div class="hero__text">
+          <h1 class="display" data-split>Апелляции</h1>
+          <p class="lead" style="--i:1">Оспоренные оценки. Сверьте доказательства с перепиской и примите решение — итог диалога пересчитается сразу после сохранения.</p>
+        </div>
+      </header>
+
+      <div class="tabs" role="tablist" style="margin-bottom:var(--s-6);animation:rise-in 600ms var(--ease-out) 250ms both">
+        <a class="tabs__item" role="tab" aria-selected="true" href="#">На проверке<span class="tabs__count">3</span></a>
+        <a class="tabs__item" role="tab" aria-selected="false" href="#">Решённые<span class="tabs__count">5</span></a>
+        <a class="tabs__item" role="tab" aria-selected="false" href="#">Все<span class="tabs__count">8</span></a>
+      </div>
+
+      <div class="review-layout">
+        <!-- ===================== Очередь ===================== -->
+        <section class="queue" aria-label="Очередь апелляций" data-stagger style="--base:300ms;--step:110ms">
+          <a class="card spot qcard is-current beam beam--amber" href="#" aria-current="true" style="--i:0">
+            <span class="qcard__top"><span class="qcard__id">p1-ru-009</span><span class="tag tag--bad"><svg class="icon"><use href="#i-flag"/></svg>Грубая</span><span class="qcard__age">2 ч назад</span></span>
+            <span class="qcard__crit">04 Корректная и полная консультация</span>
+            <span class="row" style="gap:6px"><span class="verdict verdict--mid">10 из 20</span><span class="muted small">итог 55</span></span>
+            <span class="qcard__comment">«Передать вопрос на проверку — корректный следующий шаг: причину ограничения в чате назвать нельзя».</span>
+          </a>
+          <a class="card spot qcard" href="#" style="--i:1">
+            <span class="qcard__top"><span class="qcard__id">p1-en-014</span><span class="tag tag--bad"><svg class="icon"><use href="#i-flag"/></svg>Грубая</span><span class="qcard__age">3 ч назад</span></span>
+            <span class="qcard__crit">05 Эмпатия и клиентоориентированность</span>
+            <span class="row" style="gap:6px"><span class="verdict verdict--no">Нет</span><span class="muted small">итог 35,29</span></span>
+            <span class="qcard__comment">«Я вежливо ответил и сразу передал вопрос команде, грубости в переписке нет».</span>
+          </a>
+          <a class="card spot qcard" href="#" style="--i:2">
+            <span class="qcard__top"><span class="qcard__id">p4-ru-005</span><span class="tag tag--call"><svg class="icon"><use href="#i-phone"/></svg>Звонок</span><span class="qcard__age">вчера</span></span>
+            <span class="qcard__crit">08 Грубые ошибки</span>
+            <span class="row" style="gap:6px"><span class="verdict verdict--gross">Да</span><span class="muted small">флаг</span></span>
+            <span class="qcard__comment">«Номер телефона спрашивал, чтобы найти анкету. Данные о счёте клиенту не раскрывал».</span>
+          </a>
+        </section>
+
+        <!-- ===================== Рассмотрение ===================== -->
+        <section class="card case" aria-label="Рассмотрение апелляции" style="padding:var(--s-6);animation:slide-in-right 800ms var(--ease-out) 300ms both">
+          <div class="case__head">
+            <div class="stack stack--sm">
+              <div class="row"><a class="row-link" href="dialog.html" style="font-size:var(--fs-18)" data-decrypt>p1-ru-009</a><span class="tag"><svg class="icon"><use href="#i-chat"/></svg>Чат</span><span class="tag tag--lang">RU</span><span class="tag tag--bad"><svg class="icon"><use href="#i-flag"/></svg>Грубая ошибка</span></div>
+              <h2 class="h2">04 Корректная и полная консультация</h2>
+            </div>
+            <a class="btn btn--sm" href="dialog.html" style="margin-left:auto"><svg class="icon"><use href="#i-external"/></svg>Открыть диалог</a>
+          </div>
+
+          <div class="versus">
+            <div class="versus__side">
+              <div class="versus__head"><svg class="icon icon--sm"><use href="#i-cpu"/></svg>Оценка<span class="tiny">07.11, 15:44</span></div>
+              <div class="row"><span class="verdict verdict--mid verdict--lg">10 из 20</span><span class="muted small">10 из 20 баллов</span></div>
+              <p class="small" style="color:var(--ink-2)">Ответ по существу есть <a class="turn-ref" href="#t-12">#12</a>, но клиент остался с открытым вопросом о причине ограничения <a class="turn-ref" href="#t-15">#15</a>; ошибочная рекомендация «подтверждение пока не нужно» <a class="turn-ref" href="#t-14">#14</a>.</p>
+            </div>
+            <div class="versus__mid" aria-hidden="true"><span class="versus__vs">vs</span></div>
+            <div class="versus__side versus__side--appeal">
+              <div class="versus__head"><svg class="icon icon--sm"><use href="#i-message"/></svg>Комментарий оператора<span class="tiny">07.11, 16:31</span></div>
+              <p class="small" style="color:var(--ink-2)">«Передать вопрос на проверку — корректный следующий шаг: причину ограничения в чате назвать нельзя. Клиент получил понятную инструкцию <a class="turn-ref" href="#t-16">#16</a>».</p>
+            </div>
+          </div>
+
+          <div class="stack stack--sm">
+            <span class="field__label">Фрагмент диалога, на который ссылаются оценка и апелляция</span>
+            <ol class="fragment">
+              <li class="turn turn--operator is-dim" id="t-10" style="--i:0"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-headset"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#10</span><span class="turn__who">Оператор</span><time class="turn__time">01:51</time></div><p class="turn__text">Здравствуйте, я Руслан. Какое сообщение вы видите в приложении?</p></div></li>
+              <li class="turn turn--client" id="t-11" style="--i:1"><span class="avatar"><svg class="icon"><use href="#i-user"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#11</span><span class="turn__who">Клиент</span><time class="turn__time">02:24</time></div><p class="turn__text">Никакого, кнопка не нажимается. Можно проверить сам счёт?</p></div></li>
+              <li class="turn turn--operator is-evidence" id="t-12" style="--i:2"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-headset"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#12</span><span class="turn__who">Оператор</span><time class="turn__time">02:51</time></div><p class="turn__text">Я посмотрел: на вашем счёте есть ограничение на вывод.</p><div class="turn__marks"><span class="mark mark--support">04</span><span class="mark mark--violation">03</span><span class="mark mark--violation">08</span></div></div></li>
+              <li class="turn turn--client" id="t-13" style="--i:3"><span class="avatar"><svg class="icon"><use href="#i-user"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#13</span><span class="turn__who">Клиент</span><time class="turn__time">03:06</time></div><p class="turn__text">Подождите, я ещё не подтверждал, что это мой счёт.</p></div></li>
+              <li class="turn turn--operator is-violation" id="t-14" style="--i:4"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-headset"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#14</span><span class="turn__who">Оператор</span><time class="turn__time">03:46</time></div><p class="turn__text">Подтверждение пока не нужно. Напишите, если приложение опять зависнет.</p><div class="turn__marks"><span class="mark mark--violation">04</span><span class="mark mark--violation">05</span></div></div></li>
+              <li class="turn turn--client" id="t-15" style="--i:5"><span class="avatar"><svg class="icon"><use href="#i-user"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#15</span><span class="turn__who">Клиент</span><time class="turn__time">04:19</time></div><p class="turn__text">Я спрашиваю, почему вывод ограничен.</p><div class="turn__marks"><span class="mark mark--context">04</span></div></div></li>
+              <li class="turn turn--operator" id="t-16" style="--i:6"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-headset"/></svg></span><div class="turn__body"><div class="turn__meta"><span class="turn__no">#16</span><span class="turn__who">Оператор</span><time class="turn__time">04:35</time></div><p class="turn__text">Передам вопрос на проверку. До свидания.</p><div class="turn__marks"><span class="mark mark--appeal">апелляция</span></div></div></li>
+            </ol>
+          </div>
+
+          <form class="stack" aria-label="Решение" data-decision data-base="55">
+            <span class="h3">Решение</span>
+            <div class="choices choices--2">
+              <label class="choice"><input type="radio" name="decision" value="confirm"><span class="choice__title">Подтвердить оценку</span><span class="choice__desc">10 из 20 остаётся, итог не меняется</span></label>
+              <label class="choice choice--amber"><input type="radio" name="decision" value="change" checked><span class="choice__title">Изменить оценку</span><span class="choice__desc">Выберите новый ответ и объясните почему</span></label>
+            </div>
+            <div class="editor__grid" style="grid-template-columns:minmax(0,220px) minmax(0,1fr)">
+              <div class="field">
+                <label class="field__label" for="d-new">Новый ответ</label>
+                <select class="select" id="d-new"><option data-delta="10">20 — все вопросы закрыты</option><option data-delta="5" selected>15 — основное решено</option><option data-delta="0">10 — часть закрыта</option><option data-delta="-5">5 — общая подсказка</option><option data-delta="-10">0 — нет ответа</option><option data-delta="1.25">N/A — неприменимо</option></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="d-reason">Причина решения</label>
+                <textarea class="textarea" id="d-reason" rows="3">Передача на проверку — корректный следующий шаг, причину ограничения оператор назвать не мог. Но совет «подтверждение пока не нужно» ошибочен, поэтому не 20, а 15.</textarea>
+                <span class="field__hint">Причину увидят оператор и все, кто откроет карточку диалога.</span>
+              </div>
+            </div>
+            <div class="preview">
+              <div class="preview__cell"><span>Итог сейчас</span><b>55</b></div>
+              <div class="preview__cell preview__cell--delta"><span>Критерий 04</span><b data-delta>+5</b></div>
+              <div class="preview__cell preview__cell--final"><span>Итог после решения</span><b><span data-final data-count="60" data-from="55" data-delay="900" data-duration="1200">60</span></b></div>
+            </div>
+            <div class="alert alert--bad">
+              <svg class="icon"><use href="#i-flag"/></svg>
+              <p class="small"><b>Грубая ошибка остаётся:</b> раскрытие данных о счёте без идентификации #12. Флаг в итог не входит и этим решением не снимается.</p>
+            </div>
+            <div class="row">
+              <button class="btn btn--primary btn--lg beam" type="button" data-magnet="0.2" data-toast="Решение сохранено. Итог p1-ru-009 — 60"><svg class="icon"><use href="#i-save"/></svg>Сохранить решение</button>
+              <a class="btn btn--ghost btn--lg" href="#">Следующая апелляция</a>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+    <div class="modal palette" id="palette" role="dialog" aria-modal="true" aria-label="Быстрый поиск">
+      <a class="modal__backdrop" href="#" data-close aria-label="Закрыть"></a>
+      <div class="modal__dialog">
+        <label class="palette__search"><svg class="icon icon--lg"><use href="#i-search"/></svg><span class="sr-only">Что найти</span><input type="text" placeholder="Диалог, страница или действие" data-palette-input autocomplete="off"><span class="kbd">Esc</span></label>
+        <div class="palette__list" role="listbox">
+          <p class="palette__group">Страницы</p>
+          <a class="palette__item" href="index.html" role="option" data-keywords="главная список dialogs"><span class="avatar"><svg class="icon"><use href="#i-list"/></svg></span><span>Диалоги<small>65 диалогов, фильтры и итоги</small></span><span class="kbd">1</span></a>
+          <a class="palette__item" href="analytics.html" role="option" data-keywords="аналитика анализ разговора звонок оценка запуск"><span class="avatar"><svg class="icon"><use href="#i-bars"/></svg></span><span>Аналитика<small>Анализ разговора и оценка диалогов</small></span><span class="kbd">4</span></a>
+          <a class="palette__item" href="checklist.html" role="option" data-keywords="критерии веса конструктор"><span class="avatar"><svg class="icon"><use href="#i-checklist"/></svg></span><span>Чек-листы<small>Критерии, веса, шкалы и N/A</small></span><span class="kbd">2</span></a>
+          <a class="palette__item" href="appeals.html" role="option" data-keywords="апелляции проверяющий решение"><span class="avatar"><svg class="icon"><use href="#i-scale"/></svg></span><span>Апелляции<small>3 ждут решения</small></span><span class="kbd">3</span></a>
+          <p class="palette__group">Диалоги</p>
+          <a class="palette__item" href="dialog.html" role="option" data-keywords="чат ru комиссия тариф"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-chat"/></svg></span><span>p1-ru-003<small>Чат, RU — итог 87,5 после апелляции</small></span><span class="verdict verdict--yes">87,5</span></a>
+          <a class="palette__item" href="call.html" role="option" data-keywords="звонок call ru поручение"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-phone"/></svg></span><span>p4-ru-003<small>Звонок, RU — поручение в обработке</small></span><span class="verdict verdict--yes">95,26</span></a>
+          <a class="palette__item" href="appeals.html" role="option" data-keywords="грубая ошибка вывод ограничение"><span class="avatar"><svg class="icon"><use href="#i-flag"/></svg></span><span>p1-ru-009<small>Чат, RU — грубая ошибка, апелляция</small></span><span class="verdict verdict--no">55</span></a>
+          <a class="palette__item" href="appeals.html" role="option" data-keywords="en withdrawals blocked"><span class="avatar"><svg class="icon"><use href="#i-flag"/></svg></span><span>p1-en-014<small>Чат, EN — грубая ошибка, апелляция</small></span><span class="verdict verdict--no">35,29</span></a>
+          <p class="palette__group">Действия</p>
+          <a class="palette__item" href="run.html" role="option" data-keywords="оценить новые запустить"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-sparkles"/></svg></span><span>Оценить новые диалоги<small>7 без оценки</small></span><span class="kbd">Enter</span></a>
+          <a class="palette__item" href="checklist.html" role="option" data-keywords="новый критерий добавить заменить"><span class="avatar"><svg class="icon"><use href="#i-plus"/></svg></span><span>Добавить или заменить критерий<small>Открыть конструктор</small></span><span class="kbd">Enter</span></a>
+          <a class="palette__item" href="ui-kit.html" role="option" data-keywords="компоненты ui kit"><span class="avatar"><svg class="icon"><use href="#i-grid"/></svg></span><span>Компоненты интерфейса<small>Классы и состояния для разработки</small></span><span class="kbd">Enter</span></a>
+        </div>
+        <p class="palette__empty" hidden>Ничего не найдено. Попробуйте ID диалога, например p1-ru-009.</p>
+        <div class="palette__foot"><span><span class="kbd">↑</span><span class="kbd">↓</span>выбрать</span><span><span class="kbd">Enter</span>открыть</span><span><span class="kbd">Esc</span>закрыть</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/api.js"></script>
+<script src="js/pages/appeals.js"></script>
+<script src="js/fx/aurora.js" defer></script>
+<script src="js/fx/fx.js" defer></script>
+</body>
+</html>

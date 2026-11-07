@@ -1,0 +1,142 @@
+/* =========================================================================
+   CQA · анимации
+   Входная хореография страницы — чистый CSS (работает без JS).
+   Эффекты, которым нужен JS (SplitText, CountUp, DecryptedText, Spotlight, Magnet,
+   Tilt, ClickSpark, скользящие подложки), подключаются из js/fx/fx.js.
+   Всё отключается при prefers-reduced-motion.
+   ========================================================================= */
+
+/* ---------- Базовые keyframes ---------- */
+@keyframes eq { from { transform: scaleY(0.3); } to { transform: scaleY(1); } }
+@keyframes ping { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(2.1); opacity: 0; } }
+@keyframes shimmer { 0% { transform: translateX(-120%); } 55%, 100% { transform: translateX(120%); } }
+@keyframes bar-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes slide-in-right { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes char-in { from { opacity: 0; transform: translateY(0.45em) rotate(4deg); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes stamp { 0% { opacity: 0; transform: scale(1.8) rotate(-10deg); } 60% { opacity: 1; transform: scale(0.94) rotate(1deg); } 100% { transform: none; } }
+@keyframes pulse-fade { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(3px); } 30%, 50%, 70% { transform: translateX(-5px); } 40%, 60% { transform: translateX(5px); } }
+@keyframes gradient-pan { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+@keyframes draw { from { stroke-dashoffset: var(--len, 400); } to { stroke-dashoffset: 0; } }
+@keyframes scan { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@keyframes float-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes focus-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 190, 61, 0.9), 0 0 0 0 rgba(255, 190, 61, 0.5); }
+  40% { box-shadow: 0 0 0 3px var(--amber), 0 0 0 14px rgba(255, 190, 61, 0); }
+  100% { box-shadow: 0 0 0 2px var(--amber), 0 0 36px -6px rgba(255, 190, 61, 0.7); }
+}
+@keyframes reveal-late { to { opacity: 1; } }
+@keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+/* ---------- Хореография загрузки страницы ----------
+   Панель и командная строка въезжают только при первом открытии за сессию (boot.js ставит .first-visit),
+   дальше страницы сменяются через View Transitions без повторного «въезда». */
+html.first-visit .rail { animation: slide-in-left 700ms var(--ease-out) both; }
+html.first-visit .cmdbar { animation: rise-in 600ms var(--ease-out) 80ms both; }
+
+/* ---------- Переходы между страницами (View Transitions, Chrome/Edge 126+) ---------- */
+@view-transition { navigation: auto; }
+.rail { view-transition-name: rail; }
+.cmdbar { view-transition-name: cmdbar; }
+::view-transition-old(root) { animation: vt-out 200ms var(--ease-out) both; }
+::view-transition-new(root) { animation: vt-in 420ms var(--ease-out) both; }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(12px); } }
+.hero__text > *:not(.display) { animation: rise-in 700ms var(--ease-out) both; animation-delay: calc(140ms + var(--i, 0) * 70ms); }
+.hero .display { animation: rise-in 800ms var(--ease-out) 60ms both; }
+.hero__actions { animation: slide-in-right 700ms var(--ease-out) 260ms both; }
+
+/* Каскад: дети [data-stagger] появляются по очереди (--i проставлен в разметке) */
+[data-stagger] > * { animation: rise-in 640ms var(--ease-out) both; animation-delay: calc(var(--base, 200ms) + var(--i, 0) * var(--step, 60ms)); }
+
+/* Прокрутка: карточки ниже первого экрана проявляются при появлении (Scroll-driven) */
+@supports (animation-timeline: view()) {
+  [data-reveal] { animation: rise-in linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+}
+
+/* ---------- SplitText / BlurText (React Bits) ----------
+   fx.js оборачивает буквы в .char со своим --i. До разбиения заголовок скрыт (только если JS включён). */
+html.fx [data-split]:not(.is-split) { opacity: 0; animation: reveal-late 0s 1.2s forwards; }
+[data-split].is-split { animation: none; }
+.word { display: inline-block; white-space: nowrap; }
+.char { display: inline-block; animation: char-in 760ms var(--ease-out) both; animation-delay: calc(120ms + var(--i, 0) * 28ms); }
+
+/* ---------- ShinyText / GradientText ---------- */
+.shiny { background: var(--g-text); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: gradient-pan 6s linear infinite; }
+
+/* ---------- CountUp: число скрыто, пока JS не начнёт счёт (страховка — проявится само через 1,5 с) ---------- */
+html.fx [data-count]:not(.is-counting) { opacity: 0; animation: reveal-late 0s 1.5s forwards; }
+
+/* ---------- DecryptedText ---------- */
+.decrypt-char { color: var(--signal); text-shadow: 0 0 12px var(--signal-glow); }
+
+/* ---------- Штамп вердикта ---------- */
+.stamp { animation: stamp 700ms var(--ease-out) both; animation-delay: calc(var(--base, 500ms) + var(--i, 0) * 90ms); }
+
+/* ---------- Полосы ---------- */
+.rise { transform-origin: bottom; animation: bar-rise 900ms var(--ease-spring) both; animation-delay: calc(var(--base, 300ms) + var(--i, 0) * 70ms); }
+
+/* ---------- Пульсация внимания ---------- */
+/* Пульс: анимируется только opacity псевдоэлемента — дешёво для GPU */
+.pulse { position: relative; }
+.pulse::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1.5px var(--pulse, var(--signal)), inset 0 0 18px var(--pulse, var(--signal-glow)); opacity: 0; animation: pulse-fade 2.4s var(--ease-in-out) infinite; }
+.pulse--amber { --pulse: var(--amber); }
+.pulse--bad { --pulse: var(--bad); }
+.shake { animation: shake 620ms var(--ease-out) 900ms both; }
+.float { animation: float-y 5s var(--ease-in-out) infinite; }
+
+/* ---------- Tilt + Glare (TiltedCard / GlareHover) ---------- */
+[data-tilt] { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 400ms var(--ease-out); transform-style: preserve-3d; }
+[data-tilt].is-tilting { transition: transform 80ms linear; }
+.glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden; z-index: 1; }
+.glare::before {
+  content: ""; position: absolute; top: -60%; left: -60%; width: 60%; height: 220%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transform: translateX(-100%) rotate(18deg); transition: transform 900ms var(--ease-out);
+}
+:hover > .glare::before { transform: translateX(380%) rotate(18deg); }
+
+/* ---------- Magnet ---------- */
+[data-magnet] { transition: transform 420ms var(--ease-spring); }
+[data-magnet].is-magnet { transition: transform 120ms var(--ease-out); }
+
+/* ---------- ClickSpark: холст поверх страницы ---------- */
+.spark-layer { position: fixed; inset: 0; z-index: 120; pointer-events: none; }
+
+/* ---------- Odometer (React Bits Counter): цифры прокручиваются барабаном ---------- */
+.odo { display: inline-flex; align-items: baseline; font-variant-numeric: tabular-nums; }
+.odo__col { display: inline-block; height: 1.05em; line-height: 1.05em; overflow: hidden; vertical-align: bottom; }
+.odo__strip { display: flex; flex-direction: column; transform: translateY(calc(var(--d, 0) * -1.05em)); transition: transform 1500ms var(--ease-out); transition-delay: calc(var(--k, 0) * 90ms + var(--odo-delay, 0ms)); }
+.odo__strip > span { height: 1.05em; }
+.odo__sym { display: inline-block; }
+
+/* ---------- Повтор диалога: реплики появляются по очереди, оператор «печатает» ---------- */
+.turn.is-hidden { display: none; }
+.turn.is-replay-in { animation: turn-in 420ms var(--ease-spring) both !important; }
+.turn.is-replay-in .mark { animation: stamp 520ms var(--ease-out) 260ms both; }
+.typing { display: inline-flex; gap: 4px; align-items: center; padding: 12px 16px; border-radius: var(--r-lg) 6px var(--r-lg) var(--r-lg); background: var(--bubble-operator); border: 1px solid var(--bubble-operator-line); justify-self: end; animation: rise-in 240ms var(--ease-out) both; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); animation: typing 1s var(--ease-in-out) infinite; }
+.typing i:nth-child(2) { animation-delay: 150ms; }
+.typing i:nth-child(3) { animation-delay: 300ms; }
+
+/* ---------- Всплывающая подсказка (одна на страницу, управляет fx.js) ---------- */
+@keyframes tip-in { from { opacity: 0; transform: translate(-50%, 6px) scale(0.96); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+
+/* ---------- Подчёркивание заголовков секций при появлении ---------- */
+.section__title { position: relative; }
+.section__title::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--g-signal); transform-origin: left; transform: scaleX(0); animation: grow-line 900ms var(--ease-out) 600ms both; }
+@keyframes grow-line { to { transform: scaleX(0.35); } }
+@supports (animation-timeline: view()) {
+  .section__title::after { animation: grow-line linear both; animation-timeline: view(); animation-range: entry 10% cover 30%; }
+}
+
+/* ---------- Отключение движения ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html.fx [data-split]:not(.is-split), html.fx [data-count]:not(.is-counting) { opacity: 1; animation: none; }
+  .char, .stamp, .rise, [data-stagger] > *, [data-reveal] { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+  .odo__strip { transition: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+  .aurora__fallback { animation: none; }
+}

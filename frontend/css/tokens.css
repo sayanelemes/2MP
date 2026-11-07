@@ -1,0 +1,185 @@
+/* =========================================================================
+   CQA · дизайн-токены «Freedom Signal»
+   Тёмная тема по умолчанию (язык бренда Freedom: глубокий изумрудный + яркий сигнальный зелёный).
+   Светлая тема — [data-theme="light"] на <html>.
+   Вся палитра, шрифты, радиусы и тени — только здесь.
+   ========================================================================= */
+:root {
+  color-scheme: dark;
+
+  /* --- Холст и стекло: светлее и зеленее, чем чистый «ночной» вариант --- */
+  --bg: #0B2D1F;
+  --bg-2: #0F3726;
+  --glass: rgba(24, 82, 56, 0.55);
+  --glass-2: rgba(30, 96, 66, 0.6);
+  --glass-hi: rgba(46, 124, 88, 0.5);
+  --glass-solid: #134531;
+  --line: rgba(170, 255, 210, 0.15);
+  --line-2: rgba(170, 255, 210, 0.23);
+  --line-hi: rgba(170, 255, 210, 0.4);
+
+  /* --- Текст --- */
+  --ink: #F2FFF7;
+  --ink-2: #C9EBD9;
+  --ink-3: #97C6AE;
+  --ink-4: #6B9A82;
+  --ink-inv: #04200F;
+
+  /* --- Сигнал бренда (ярче) --- */
+  --signal: #45F395;
+  --signal-2: #26DB7E;
+  --signal-3: #12A95D;
+  --lime: #E1FC70;
+  --teal: #55EDD3;
+  --signal-glow: rgba(69, 243, 149, 0.45);
+  --signal-soft: rgba(69, 243, 149, 0.14);
+
+  /* --- Статусы --- */
+  --ok: #52F29C;      --ok-bg: rgba(82, 242, 156, 0.14);   --ok-line: rgba(82, 242, 156, 0.4);
+  --bad: #FF6F7D;     --bad-bg: rgba(255, 111, 125, 0.15); --bad-line: rgba(255, 111, 125, 0.45);
+  --mid: #D6F45E;     --mid-bg: rgba(214, 244, 94, 0.14);  --mid-line: rgba(214, 244, 94, 0.42);
+  --na: #9DBCAC;      --na-bg: rgba(157, 188, 172, 0.15);  --na-line: rgba(157, 188, 172, 0.42);
+  --amber: #FFCA5C;   --amber-bg: rgba(255, 202, 92, 0.15); --amber-line: rgba(255, 202, 92, 0.46);
+  --info: #72C6FF;    --info-bg: rgba(114, 198, 255, 0.15); --info-line: rgba(114, 198, 255, 0.44);
+
+  /* --- Роли в транскрипте --- */
+  --bubble-client: rgba(242, 255, 247, 0.08);
+  --bubble-client-line: rgba(242, 255, 247, 0.13);
+  --bubble-operator: linear-gradient(135deg, rgba(69, 243, 149, 0.24), rgba(38, 219, 126, 0.1));
+  --bubble-operator-line: rgba(69, 243, 149, 0.38);
+  --bubble-bot: rgba(160, 180, 255, 0.08);
+  --bubble-bot-line: rgba(160, 180, 255, 0.26);
+  --bubble-bot-ink: #B7C3F0;
+
+  /* --- Градиенты --- */
+  --g-signal: linear-gradient(110deg, #22D97C 0%, #45F395 40%, #ABF66C 75%, #E1FC70 100%);
+  --g-signal-v: linear-gradient(0deg, #12A95D 0%, #45F395 60%, #E1FC70 100%);
+  --g-text: linear-gradient(100deg, #F2FFF7 0%, #A8FAC9 35%, #45F395 55%, #E1FC70 75%, #F2FFF7 100%);
+  --g-amber: linear-gradient(110deg, #FFB83A 0%, #FFDA7A 100%);
+  --g-bad: linear-gradient(110deg, #FF4A61 0%, #FF9475 100%);
+
+  /* --- Аврора (WebGL) --- */
+  --aurora-1: #1FA868;
+  --aurora-2: #45F395;
+  --aurora-3: #55EDD3;
+  --aurora-4: #E1FC70;
+  --aurora-opacity: 0.8;
+
+  /* --- Типографика --- */
+  --f-ui: "Geologica", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --f-display: "Unbounded", "Geologica", "Segoe UI", system-ui, sans-serif;
+
+  --fs-11: 0.6875rem;
+  --fs-12: 0.75rem;
+  --fs-13: 0.8125rem;
+  --fs-14: 0.875rem;
+  --fs-15: 0.9375rem;
+  --fs-16: 1rem;
+  --fs-18: 1.125rem;
+  --fs-22: 1.375rem;
+  --fs-28: 1.75rem;
+  --fs-36: 2.25rem;
+  --fs-48: 3rem;
+  --fs-72: 4.5rem;
+
+  /* --- Отступы --- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+
+  /* --- Радиусы (вложенные: внешний = внутренний + отступ) --- */
+  --r-xs: 7px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* --- Тени и свечения (умеренный радиус размытия — дешевле в отрисовке) --- */
+  --sh-1: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 1px 2px rgba(0, 0, 0, 0.25);
+  --sh-2: 0 1px 0 rgba(255, 255, 255, 0.07) inset, 0 14px 28px -16px rgba(0, 20, 10, 0.6), 0 2px 6px rgba(0, 20, 10, 0.2);
+  --sh-3: 0 1px 0 rgba(255, 255, 255, 0.08) inset, 0 30px 60px -24px rgba(0, 20, 10, 0.7), 0 6px 16px rgba(0, 20, 10, 0.3);
+  --sh-glow: 0 0 0 1px rgba(69, 243, 149, 0.35), 0 10px 32px -10px rgba(69, 243, 149, 0.55);
+  --sh-focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--signal);
+
+  /* --- Каркас --- */
+  --rail-w: 84px;
+  --rail-w-open: 272px;
+  --cmd-h: 64px;
+  --page-max: 1520px;
+
+  /* --- Движение --- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 160ms;
+  --t-med: 280ms;
+  --t-slow: 620ms;
+}
+
+/* =========================================================================
+   Светлая тема
+   ========================================================================= */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #F3FAF6;
+  --bg-2: #E8F5EE;
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-2: rgba(255, 255, 255, 0.82);
+  --glass-hi: rgba(255, 255, 255, 0.92);
+  --glass-solid: #FFFFFF;
+  --line: rgba(8, 92, 54, 0.12);
+  --line-2: rgba(8, 92, 54, 0.18);
+  --line-hi: rgba(8, 92, 54, 0.3);
+
+  --ink: #05261A;
+  --ink-2: #2A4F3E;
+  --ink-3: #557A68;
+  --ink-4: #86A595;
+  --ink-inv: #FFFFFF;
+
+  --signal: #0DB463;
+  --signal-2: #0A9C55;
+  --signal-3: #077A42;
+  --lime: #9ED11C;
+  --teal: #12A891;
+  --signal-glow: rgba(13, 180, 99, 0.35);
+  --signal-soft: rgba(13, 180, 99, 0.1);
+
+  --ok: #0F9F55;      --ok-bg: rgba(15, 159, 85, 0.1);     --ok-line: rgba(15, 159, 85, 0.32);
+  --bad: #D93146;     --bad-bg: rgba(217, 49, 70, 0.09);   --bad-line: rgba(217, 49, 70, 0.32);
+  --mid: #6E8F00;     --mid-bg: rgba(130, 170, 0, 0.12);   --mid-line: rgba(110, 143, 0, 0.36);
+  --na: #6C8277;      --na-bg: rgba(108, 130, 119, 0.12);  --na-line: rgba(108, 130, 119, 0.34);
+  --amber: #B97800;   --amber-bg: rgba(255, 176, 32, 0.16); --amber-line: rgba(185, 120, 0, 0.36);
+  --info: #1D6FC4;    --info-bg: rgba(29, 111, 196, 0.1);   --info-line: rgba(29, 111, 196, 0.3);
+
+  --bubble-client: rgba(5, 38, 26, 0.05);
+  --bubble-client-line: rgba(5, 38, 26, 0.08);
+  --bubble-operator: linear-gradient(135deg, rgba(13, 180, 99, 0.16), rgba(158, 209, 28, 0.08));
+  --bubble-operator-line: rgba(13, 180, 99, 0.3);
+  --bubble-bot: rgba(70, 90, 180, 0.05);
+  --bubble-bot-line: rgba(70, 90, 180, 0.2);
+  --bubble-bot-ink: #4C5B93;
+
+  --g-text: linear-gradient(100deg, #05261A 0%, #0A8F4B 35%, #0DB463 55%, #6E9F00 75%, #05261A 100%);
+
+  --aurora-1: #7BE3A8;
+  --aurora-2: #2EE57E;
+  --aurora-3: #6FE8D5;
+  --aurora-4: #D4F75C;
+  --aurora-opacity: 0.45;
+
+  --sh-1: 0 1px 2px rgba(5, 38, 26, 0.06);
+  --sh-2: 0 18px 40px -22px rgba(5, 60, 35, 0.35), 0 2px 8px rgba(5, 38, 26, 0.05);
+  --sh-3: 0 40px 90px -30px rgba(5, 60, 35, 0.45), 0 8px 24px rgba(5, 38, 26, 0.08);
+  --sh-glow: 0 0 0 1px rgba(13, 180, 99, 0.35), 0 10px 30px -10px rgba(13, 180, 99, 0.45);
+  --sh-focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--signal);
+}

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3FAF6">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B2D1F'/%3E%3Cg fill='%2345F395'%3E%3Crect x='6' y='17' width='3' height='8' rx='1.5'/%3E%3Crect x='11' y='11' width='3' height='14' rx='1.5'/%3E%3Crect x='16' y='6' width='3' height='19' rx='1.5'/%3E%3Crect x='21' y='12' width='3' height='13' rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
+  <title>Компоненты · CQA</title>
+  <script src="js/fx/boot.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@300..800&family=Unbounded:wght@500..800&display=swap"></noscript>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+  <link rel="stylesheet" href="css/fx.css">
+</head>
+<body>
+  <!-- Иконки (inline-спрайт, чтобы работать и с file://). Использование: <svg class="icon"><use href="#i-check"/></svg> -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3.5 21l1.4-4.9A8.5 8.5 0 1 1 21 12Z"/><path d="m8.6 12.2 2.4 2.4 4.6-5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.3 19a10 10 0 1 1 17.4 0"/></symbol>
+    <symbol id="i-checklist" viewBox="0 0 24 24"><path d="M10 6h11M10 12h11M10 18h11"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M4 7h16"/><path d="m4 7-3 7a3.5 3.5 0 0 0 6 0L4 7ZM20 7l-3 7a3.5 3.5 0 0 0 6 0l-3-7Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></symbol>
+    <symbol id="i-sort-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 16a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2zM3 16a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2z"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0M12 17v5"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9zM9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H8a5 5 0 1 1 1-9.9A6 6 0 0 1 20 11a4 4 0 0 1-2.5 8z"/></symbol>
+    <symbol id="i-toggle" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="5"/><circle cx="16" cy="12" r="3"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24"><path d="M5 20v-4M10 20v-8M15 20V8M20 20V4"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5M9 10.8V4h6v6.8l3 3.2H6z"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/><path d="M19 3v4M17 5h4"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
+  </svg>
+  <div class="aurora" aria-hidden="true"><canvas class="aurora__canvas"></canvas><div class="aurora__fallback"></div></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="app" id="cqa-app">
+  <aside class="rail" aria-label="Навигация">
+    <a class="rail__brand" href="index.html" aria-label="CQA, на главную">
+      <span class="logo-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="rail__brand-text rail__label"><b>CQA</b><small>Freedom Broker</small></span>
+    </a>
+    <nav class="rail__nav" aria-label="Разделы">
+      <a class="rail__link" href="index.html" style="--i:0"><svg class="icon"><use href="#i-list"/></svg><span class="rail__label">Диалоги</span><span class="rail__meta">65</span></a>
+      <a class="rail__link" href="checklist.html" style="--i:1"><svg class="icon"><use href="#i-checklist"/></svg><span class="rail__label">Чек-листы</span><span class="rail__meta">v2</span></a>
+      <a class="rail__link" href="appeals.html" style="--i:2"><svg class="icon"><use href="#i-scale"/></svg><span class="rail__dot" aria-hidden="true"></span><span class="rail__label">Апелляции</span><span class="rail__meta rail__meta--amber">3</span></a>
+      <a class="rail__link" href="analytics.html" style="--i:3"><svg class="icon"><use href="#i-bars"/></svg><span class="rail__label">Аналитика</span></a>
+      <p class="rail__section">Для разработки</p>
+      <a class="rail__link is-active" aria-current="page" href="ui-kit.html" style="--i:4"><svg class="icon"><use href="#i-grid"/></svg><span class="rail__label">Компоненты</span></a>
+    </nav>
+    <div class="rail__cta"><a class="btn btn--primary" href="run.html"><svg class="icon"><use href="#i-sparkles"/></svg><span class="rail__label">Новая оценка</span></a></div>
+    <div class="rail__foot">
+      <div class="rail__dataset"><span class="live-dot" aria-hidden="true"></span><span class="rail__label"><b>Набор DEV</b><small>65 диалогов загружено</small></span></div>
+      <div class="rail__tools">
+        <button class="rail__tool" type="button" data-theme-toggle aria-label="Сменить тему" aria-pressed="false"><svg class="icon i-sun"><use href="#i-sun"/></svg><svg class="icon i-moon"><use href="#i-moon"/></svg></button>
+        <button class="rail__tool" type="button" data-rail-pin aria-label="Закрепить панель" aria-pressed="false"><svg class="icon"><use href="#i-pin"/></svg></button>
+      </div>
+    </div>
+  </aside>
+  <div class="main">
+    <header class="cmdbar">
+      <nav class="cmdbar__crumbs" aria-label="Путь"><span aria-current="page">Компоненты</span></nav>
+      <label class="search cmdbar__search"><span class="sr-only">Быстрый поиск</span><svg class="icon"><use href="#i-search"/></svg><input class="input" type="search" placeholder="Найти диалог, страницу или действие" data-palette-open readonly><span class="kbd">Ctrl K</span></label>
+      <div class="seg" role="group" aria-label="Роль" data-static>
+        <a class="seg__item is-active" aria-pressed="true" href="index.html"><svg class="icon"><use href="#i-headset"/></svg>Оператор</a>
+        <a class="seg__item" aria-pressed="false" href="appeals.html"><svg class="icon"><use href="#i-shield"/></svg>Проверяющий</a>
+      </div>
+    </header>
+    <main class="page kit">
+      <header class="hero">
+        <div class="hero__text">
+          <h1 class="display" data-split>Компоненты</h1>
+          <p class="lead" style="--i:1">Все элементы интерфейса и их состояния с именами классов — чтобы собирать экраны из JS. Эффекты включаются атрибутами: data-split, data-count, data-decrypt, data-magnet, data-tilt, data-toast.</p>
+        </div>
+      </header>
+
+      <section class="card kit__block" data-reveal>
+        <span class="kit__label">Кнопки — <code>.btn</code>, <code>--primary</code>, <code>--amber</code>, <code>--danger</code>, <code>--ghost</code>, <code>--sm</code>, <code>--lg</code>; луч по рамке — <code>.beam</code>; магнит — <code>data-magnet</code></span>
+        <div class="kit__row">
+          <button class="btn btn--primary btn--lg beam" type="button" data-magnet="0.3"><svg class="icon"><use href="#i-sparkles"/></svg>Оценить</button>
+          <button class="btn btn--primary" type="button"><svg class="icon"><use href="#i-gauge"/></svg>Запустить</button>
+          <button class="btn" type="button"><svg class="icon"><use href="#i-refresh"/></svg>Обновить</button>
+          <button class="btn btn--amber" type="button"><svg class="icon"><use href="#i-scale"/></svg>Оспорить</button>
+          <button class="btn btn--danger" type="button"><svg class="icon"><use href="#i-trash"/></svg>Удалить</button>
+          <button class="btn btn--ghost" type="button">Отмена</button>
+          <button class="btn btn--sm" type="button">Маленькая</button>
+          <button class="btn btn--primary" type="button" disabled>Недоступна</button>
+        </div>
+      </section>
+
+      <section class="card kit__block" data-reveal>
+        <span class="kit__label">Ответы — <code>.verdict--yes</code>, <code>--no</code>, <code>--na</code>, <code>--mid</code>, <code>--amber</code>, <code>--gross</code>; метки — <code>.tag</code>; подпись диалога — <code>.sig</code> (классы полос: m, x, n, g, c, f)</span>
+        <div class="kit__row">
+          <span class="verdict verdict--yes">Да</span><span class="verdict verdict--no">Нет</span><span class="verdict verdict--na">N/A</span><span class="verdict verdict--mid">10 из 20</span><span class="verdict verdict--amber">На проверке</span><span class="verdict verdict--gross">Грубая ошибка</span><span class="verdict verdict--no is-struck">Нет</span>
+        </div>
+        <div class="kit__row">
+          <span class="tag tag--lang">RU</span><span class="tag tag--lang tag--kz">KZ</span><span class="tag tag--lang tag--en">EN</span>
+          <span class="tag"><svg class="icon"><use href="#i-chat"/></svg>Чат</span><span class="tag tag--call"><svg class="icon"><use href="#i-phone"/></svg>Звонок</span>
+          <span class="tag tag--bad"><svg class="icon"><use href="#i-flag"/></svg>Грубая ошибка</span><span class="tag tag--amber"><svg class="icon"><use href="#i-scale"/></svg>На проверке</span><span class="tag tag--ok"><svg class="icon"><use href="#i-scale"/></svg>Решение принято</span>
+          <span class="sig" role="img" aria-label="Пример подписи"><i style="--i:0"></i><i style="--i:1"></i><i class="n" style="--i:2"></i><i class="m" style="--i:3"></i><i class="x" style="--i:4"></i><i style="--i:5"></i><i class="c" style="--i:6"></i><i class="g" style="--i:7"></i></span>
+          <span class="score score--ok"><span class="score__value">87,5</span></span><span class="score score--mid"><span class="score__value">68,75</span></span><span class="score score--bad"><span class="score__value">31,25</span></span>
+        </div>
+        <div class="kit__row">
+          <span class="mark mark--support">01</span><span class="mark mark--violation">03</span><span class="mark mark--expected">07</span><span class="mark mark--context">04</span><span class="mark mark--appeal">05</span>
+          <a class="turn-ref" href="#">#12</a><span class="play-chip"><svg class="icon"><use href="#i-play"/></svg>1:46</span><span class="kbd">/</span><span class="masked">имя скрыто</span>
+        </div>
+      </section>
+
+      <section class="kit__grid">
+        <article class="card spot tile" data-tilt="6" data-reveal>
+          <span class="glare" aria-hidden="true"></span>
+          <span class="tile__label"><svg class="icon"><use href="#i-gauge"/></svg>CountUp — <code>data-count</code></span>
+          <span class="tile__value"><span class="shiny" data-count="95.26">95,26</span><small>из 100</small></span>
+          <p class="tile__note">Карточка с прожектором (<code>.spot</code>), наклоном (<code>data-tilt</code>) и бликом (<code>.glare</code>).</p>
+        </article>
+        <article class="card spot tile" data-reveal>
+          <span class="tile__label"><svg class="icon"><use href="#i-zap"/></svg>Загрузка</span>
+          <div class="progress"><div class="progress__fill" style="--p:57%"></div></div>
+          <div class="row"><span class="bars-loader bars-loader--lg"><i></i><i></i><i></i><i></i></span><span class="skeleton skeleton--line" style="flex:1"></span></div>
+          <span class="skeleton skeleton--block"></span>
+        </article>
+        <article class="card spot tile" data-reveal>
+          <span class="tile__label"><svg class="icon"><use href="#i-sparkles"/></svg>DecryptedText — <code>data-decrypt</code></span>
+          <span class="dlg-id" data-decrypt>p1-kz-013</span>
+          <p class="tile__note">Odometer — <code>data-odometer</code>: <b style="font-family:var(--f-display);font-size:var(--fs-28)"><span data-odometer data-delay="400">2026</span></b></p>
+          <p class="tile__note">Подсказка — <code>data-tip</code>: <span class="tag" data-tip="Так выглядит подсказка">наведите</span>. Быстрый поиск — <span class="kbd">Ctrl K</span> или <span class="kbd">/</span>. Любая кнопка — ClickSpark.</p>
+        </article>
+      </section>
+
+      <section class="card kit__block" data-reveal>
+        <span class="kit__label">Поля и переключатели</span>
+        <div class="kit__grid">
+          <div class="field"><label class="field__label" for="k1">Название</label><input class="input" id="k1" placeholder="Например, Установление контакта"><span class="field__hint">Подсказка под полем</span></div>
+          <div class="field"><label class="field__label" for="k2">Вес</label><input class="input is-invalid" id="k2" value="-5"><span class="field__error">Вес должен быть числом от 0</span></div>
+          <div class="field"><label class="field__label" for="k3">Секция</label><select class="select" id="k3"><option>Безопасность и решение</option></select></div>
+        </div>
+        <div class="kit__row">
+          <label class="check"><input type="checkbox" checked>Флажок</label>
+          <label class="check"><input type="radio" name="r" checked>Вариант А</label>
+          <label class="check"><input type="radio" name="r">Вариант Б</label>
+          <label class="switch"><input type="checkbox" checked>Разрешить N/A</label>
+          <div class="seg"><button class="seg__item is-active" type="button" aria-pressed="true">Все</button><button class="seg__item" type="button" aria-pressed="false">Чаты</button><button class="seg__item" type="button" aria-pressed="false">Звонки</button></div>
+        </div>
+      </section>
+
+      <section class="card kit__block" data-reveal>
+        <span class="kit__label">Сообщения — <code>.alert</code>; уведомление — <code>data-toast="Текст"</code> или <code>CQAfx.toast()</code></span>
+        <div class="kit__grid">
+          <div class="alert alert--ok"><svg class="icon"><use href="#i-check-circle"/></svg><div><p class="alert__title">Чек-лист сохранён</p><p class="small">Версия 3 стала активной. Новые оценки пойдут по ней.</p></div></div>
+          <div class="alert alert--bad"><svg class="icon"><use href="#i-x-circle"/></svg><div><p class="alert__title">Набор не загружен</p><p class="small">API ответил 401: истёк токен в ссылке. Возьмите новую ссылку из задания.</p></div></div>
+          <div class="alert alert--amber"><svg class="icon"><use href="#i-alert"/></svg><div><p class="alert__title">Сумма весов 95</p><p class="small">Итог всё равно нормируется к 100 баллам.</p></div></div>
+        </div>
+        <div class="kit__row">
+          <button class="btn" type="button" data-toast="Решение сохранено. Итог p1-ru-009 — 60">Показать уведомление</button>
+          <button class="btn btn--danger" type="button" data-toast="Не удалось сохранить: добавьте причину решения" data-toast-kind="bad">Показать ошибку</button>
+          <a class="btn" href="dialog.html#appeal-modal">Модальное окно</a>
+        </div>
+      </section>
+
+      <section class="kit__grid">
+        <div class="card state" data-reveal>
+          <span class="state__icon float"><svg class="icon"><use href="#i-database"/></svg></span>
+          <p class="state__title">Диалогов пока нет</p>
+          <p class="state__text">Загрузите набор по API или импортируйте JSON-файл с ответом API.</p>
+          <a class="btn btn--primary" href="run.html"><svg class="icon"><use href="#i-download"/></svg>Загрузить набор</a>
+        </div>
+        <div class="card state" data-reveal>
+          <span class="state__icon float"><svg class="icon"><use href="#i-search"/></svg></span>
+          <p class="state__title">Ничего не найдено</p>
+          <p class="state__text">Ни один диалог не подходит под фильтры. Уберите язык или расширьте диапазон итога.</p>
+          <button class="btn" type="button">Сбросить фильтры</button>
+        </div>
+        <div class="card state state--error" data-reveal>
+          <span class="state__icon float"><svg class="icon"><use href="#i-alert"/></svg></span>
+          <p class="state__title">Оценка не выполнена</p>
+          <p class="state__text">Backend вернул 504: модель не ответила за 60 секунд. Повторите или оцените локальным движком.</p>
+          <button class="btn btn--danger" type="button"><svg class="icon"><use href="#i-refresh"/></svg>Повторить</button>
+        </div>
+      </section>
+    </main>
+    <div class="modal palette" id="palette" role="dialog" aria-modal="true" aria-label="Быстрый поиск">
+      <a class="modal__backdrop" href="#" data-close aria-label="Закрыть"></a>
+      <div class="modal__dialog">
+        <label class="palette__search"><svg class="icon icon--lg"><use href="#i-search"/></svg><span class="sr-only">Что найти</span><input type="text" placeholder="Диалог, страница или действие" data-palette-input autocomplete="off"><span class="kbd">Esc</span></label>
+        <div class="palette__list" role="listbox">
+          <p class="palette__group">Страницы</p>
+          <a class="palette__item" href="index.html" role="option" data-keywords="главная список dialogs"><span class="avatar"><svg class="icon"><use href="#i-list"/></svg></span><span>Диалоги<small>65 диалогов, фильтры и итоги</small></span><span class="kbd">1</span></a>
+          <a class="palette__item" href="analytics.html" role="option" data-keywords="аналитика анализ разговора звонок оценка запуск"><span class="avatar"><svg class="icon"><use href="#i-bars"/></svg></span><span>Аналитика<small>Анализ разговора и оценка диалогов</small></span><span class="kbd">4</span></a>
+          <a class="palette__item" href="checklist.html" role="option" data-keywords="критерии веса конструктор"><span class="avatar"><svg class="icon"><use href="#i-checklist"/></svg></span><span>Чек-листы<small>Критерии, веса, шкалы и N/A</small></span><span class="kbd">2</span></a>
+          <a class="palette__item" href="appeals.html" role="option" data-keywords="апелляции проверяющий решение"><span class="avatar"><svg class="icon"><use href="#i-scale"/></svg></span><span>Апелляции<small>3 ждут решения</small></span><span class="kbd">3</span></a>
+          <p class="palette__group">Диалоги</p>
+          <a class="palette__item" href="dialog.html" role="option" data-keywords="чат ru комиссия тариф"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-chat"/></svg></span><span>p1-ru-003<small>Чат, RU — итог 87,5 после апелляции</small></span><span class="verdict verdict--yes">87,5</span></a>
+          <a class="palette__item" href="call.html" role="option" data-keywords="звонок call ru поручение"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-phone"/></svg></span><span>p4-ru-003<small>Звонок, RU — поручение в обработке</small></span><span class="verdict verdict--yes">95,26</span></a>
+          <a class="palette__item" href="appeals.html" role="option" data-keywords="грубая ошибка вывод ограничение"><span class="avatar"><svg class="icon"><use href="#i-flag"/></svg></span><span>p1-ru-009<small>Чат, RU — грубая ошибка, апелляция</small></span><span class="verdict verdict--no">55</span></a>
+          <a class="palette__item" href="appeals.html" role="option" data-keywords="en withdrawals blocked"><span class="avatar"><svg class="icon"><use href="#i-flag"/></svg></span><span>p1-en-014<small>Чат, EN — грубая ошибка, апелляция</small></span><span class="verdict verdict--no">35,29</span></a>
+          <p class="palette__group">Действия</p>
+          <a class="palette__item" href="run.html" role="option" data-keywords="оценить новые запустить"><span class="avatar avatar--operator"><svg class="icon"><use href="#i-sparkles"/></svg></span><span>Оценить новые диалоги<small>7 без оценки</small></span><span class="kbd">Enter</span></a>
+          <a class="palette__item" href="checklist.html" role="option" data-keywords="новый критерий добавить заменить"><span class="avatar"><svg class="icon"><use href="#i-plus"/></svg></span><span>Добавить или заменить критерий<small>Открыть конструктор</small></span><span class="kbd">Enter</span></a>
+          <a class="palette__item" href="ui-kit.html" role="option" data-keywords="компоненты ui kit"><span class="avatar"><svg class="icon"><use href="#i-grid"/></svg></span><span>Компоненты интерфейса<small>Классы и состояния для разработки</small></span><span class="kbd">Enter</span></a>
+        </div>
+        <p class="palette__empty" hidden>Ничего не найдено. Попробуйте ID диалога, например p1-ru-009.</p>
+        <div class="palette__foot"><span><span class="kbd">↑</span><span class="kbd">↓</span>выбрать</span><span><span class="kbd">Enter</span>открыть</span><span><span class="kbd">Esc</span>закрыть</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/fx/aurora.js" defer></script>
+<script src="js/fx/fx.js" defer></script>
+</body>
+</html>
