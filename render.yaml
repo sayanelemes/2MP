@@ -10,7 +10,9 @@ services:
       - key: PYTHON_VERSION
         value: "3.12.7"
       - key: LLM_PROVIDER
-        value: gemini,groq
+        value: anthropic,gemini,groq
+      - key: LLM_EFFORT
+        value: medium
       - key: LLM_ALLOW_VOICE
         value: "true"
       - key: GEMINI_API_KEY
