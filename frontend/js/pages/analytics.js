@@ -153,6 +153,10 @@
   document.addEventListener("DOMContentLoaded", async () => {
     try {
       all = await CQA.api.conversations();
+      if (!all.length) {  // группа пуста: например, на новом сервере до загрузки набора
+        $(".page").innerHTML = `<div class="card state"><span class="state__icon"><svg class="icon"><use href="#i-database"/></svg></span><p class="state__title">В группе ${E(CQA.group)} нет диалогов</p><p class="state__text">Загрузите набор на странице «Оценка диалогов»: по API или файлом JSON.</p><a class="btn btn--primary" href="run.html">Загрузить набор</a></div>`;
+        return;
+      }
       const sorted = [...all].sort((a, b) => (CQA.isCall(b) - CQA.isCall(a)) || a.conversation_id.localeCompare(b.conversation_id));
       const sel = $("#ana-pick");
       sel.innerHTML = sorted.map((c) => `<option value="${E(c.conversation_id)}">${E(c.conversation_id)} — ${CQA.isCall(c) ? "звонок" : "чат"}, ${CQA.mmss(c.duration)}${c.final_total !== null && c.final_total !== undefined ? ", итог " + N(c.final_total) : ""}</option>`).join("");
