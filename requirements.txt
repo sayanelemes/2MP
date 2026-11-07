@@ -2,3 +2,4 @@ fastapi
 uvicorn
 httpx
 pytest
+anthropic==2.6.0

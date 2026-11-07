@@ -20,6 +20,7 @@ LLM_MODEL = os.environ.get("LLM_MODEL", "").strip()
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+LLM_EFFORT = os.environ.get("LLM_EFFORT", "medium").strip().lower()  # глубина рассуждения Claude: low | medium | high
 LLM_RPM = float(os.environ.get("LLM_RPM") or 5)
 LLM_CONCURRENCY = int(os.environ.get("LLM_CONCURRENCY") or 1)
 # звонки не отправляем в бесплатный сервис, пока организаторы не разрешат

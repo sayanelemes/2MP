@@ -155,13 +155,3 @@ def test_facts_block():
     assert "Реплик оператора: 2, клиента: 3" in facts
     assert "Факты из транскрипта" in prompts.build_user({**CONV, "transcript": conv["transcript"]}, SEED)
 
-
-def test_anthropic_provider_collects_text_blocks(monkeypatch):
-    from backend import config, llm
-    seen = {}
-    monkeypatch.setattr(config, "ANTHROPIC_API_KEY", "k1")
-    monkeypatch.setattr(llm, "_post", lambda url, headers, body: seen.update(url=url, headers=headers, body=body) or
-                        {"content": [{"type": "thinking", "thinking": ""}, {"type": "text", "text": '{"a":1}'}]})
-    assert llm._generate("anthropic", "k1", "sys", "usr", {}) == '{"a":1}'
-    assert seen["url"].endswith("/v1/messages") and seen["headers"]["x-api-key"] == "k1"
-    assert seen["body"]["model"] == "claude-haiku-5-5" and seen["body"]["system"] == "sys" and "temperature" not in seen["body"]

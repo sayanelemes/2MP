@@ -2,6 +2,7 @@
 import threading
 import time
 
+import anthropic
 import httpx
 
 from . import config
@@ -50,6 +51,61 @@ def _keys(provider):
     return [k.strip() for k in raw.split(",") if k.strip()] or [""]
 
 
+def strict_schema(schema):
+    """Копия схемы для структурированного вывода Claude: у объектов additionalProperties=false, [X, "null"] -> anyOf."""
+    if isinstance(schema, list):
+        return [strict_schema(x) for x in schema]
+    if not isinstance(schema, dict):
+        return schema
+    out = {k: strict_schema(v) if k == "items" else v for k, v in schema.items()}
+    if "properties" in out:
+        out["properties"] = {k: strict_schema(v) for k, v in schema["properties"].items()}
+        out["additionalProperties"] = False
+    t = out.get("type")
+    if isinstance(t, list) and "null" in t:
+        rest = [x for x in t if x != "null"]
+        return {"anyOf": [{**out, "type": rest[0] if len(rest) == 1 else rest}, {"type": "null"}]}
+    return out
+
+
+_anthropic_clients = {}
+
+
+def _anthropic(key, system, user, schema):
+    if not key:
+        raise LLMError("ANTHROPIC_API_KEY не задан в .env")
+    if key not in _anthropic_clients:  # повторы делает evaluator._call, поэтому у клиента max_retries=0
+        _anthropic_clients[key] = anthropic.Anthropic(api_key=key, max_retries=0, timeout=180)
+    try:
+        # без temperature/top_p/top_k/thinking/prefill: на Claude Haiku 5.5 это 400; глубину задаёт только effort
+        response = _anthropic_clients[key].messages.create(
+            model=_model("anthropic"), max_tokens=16000, system=system,
+            messages=[{"role": "user", "content": user}],
+            output_config={"effort": config.LLM_EFFORT, "format": {"type": "json_schema", "schema": strict_schema(schema)}})
+    except anthropic.RateLimitError as e:
+        ra = e.response.headers.get("retry-after", "")
+        raise LLMError("провайдер ответил 429", retryable=True, status=429, retry_after=float(ra) if ra.replace(".", "").isdigit() and ra else None)
+    except (anthropic.AuthenticationError, anthropic.PermissionDeniedError):
+        raise LLMError("неверный или неактивный ANTHROPIC_API_KEY", status=401)
+    except anthropic.NotFoundError:
+        raise LLMError(f"модель не найдена: {_model('anthropic')}", status=404)
+    except anthropic.BadRequestError as e:
+        raise LLMError(f"провайдер ответил 400: {e.message[:300]}", status=400)
+    except anthropic.APIStatusError as e:
+        raise LLMError(f"провайдер ответил {e.status_code}", retryable=e.status_code >= 500, status=e.status_code)
+    except (anthropic.APITimeoutError, anthropic.APIConnectionError) as e:
+        raise LLMError(f"сеть: {type(e).__name__}", retryable=True)
+    if response.stop_reason == "refusal":
+        raise LLMError("модель отказалась отвечать")
+    if response.stop_reason == "max_tokens":
+        raise LLMError("ответ модели обрезан по max_tokens")
+    print(f"anthropic: вход {response.usage.input_tokens} токенов, выход {response.usage.output_tokens}")
+    text = next((b.text for b in response.content if b.type == "text"), "")
+    if not text:
+        raise LLMError("пустой ответ модели")
+    return text
+
+
 def _generate(provider, key, system, user, schema):
     if provider == "gemini":
         if not key:
@@ -78,17 +134,7 @@ def _generate(provider, key, system, user, schema):
         except (KeyError, IndexError):
             raise LLMError(f"пустой ответ модели: {str(data)[:300]}")
     if provider == "anthropic":
-        if not key:
-            raise LLMError("ANTHROPIC_API_KEY не задан в .env")
-        data = _post(  # без temperature: на новых моделях Claude нестандартное значение даёт 400; JSON требует системный промпт
-            "https://api.anthropic.com/v1/messages",
-            {"x-api-key": key, "anthropic-version": "2023-06-01"},
-            {"model": _model(provider), "max_tokens": 16000, "system": system,
-             "messages": [{"role": "user", "content": user}]})
-        text = "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
-        if not text:
-            raise LLMError(f"пустой ответ модели: {str(data)[:300]}")
-        return text
+        return _anthropic(key, system, user, schema)
     raise LLMError(f"неизвестный LLM_PROVIDER: {provider}")
 
 
