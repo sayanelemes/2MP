@@ -5,7 +5,7 @@
   const ICON = (n, c) => `<svg class="icon${c ? " " + c : ""}"><use href="#i-${n}"/></svg>`;
   const params = new URLSearchParams(location.search);
   const picked = (params.get("ids") || "").split(",").filter(Boolean);
-  let all = [], versions = [], timer = null;
+  let all = [], versions = [], timer = null, wasStopped = false;
   const reasons = {};  // evaluation_id → понятная причина, почему диалог не оценён
   const why = (e) => (/LLM_ALLOW_VOICE/.test(e) ? "Звонки не отправляются в ИИ: нужна настройка LLM_ALLOW_VOICE=true в .env (после разрешения организаторов)." : e || "Диалог не оценён автоматически.");
 
@@ -70,7 +70,12 @@
   function track(run, ids, version) {
     const hud = $("[data-run-hud]"), jobs = $("[data-run-jobs]"), card = jobs.closest(".card"), t0 = Date.now();
     hud.hidden = false; card.hidden = false;
-    $(".run-hud .btn")?.setAttribute("hidden", "");
+    const stopBtn = $(".run-hud .btn"), stopFresh = stopBtn.cloneNode(true);  // клон: без демо-обработчиков fx.js
+    stopBtn.replaceWith(stopFresh); stopFresh.hidden = false; stopFresh.disabled = false;
+    stopFresh.addEventListener("click", async () => {
+      stopFresh.disabled = true;
+      try { await CQA.api.post(`/api/jobs/${run.job_id}/stop`); wasStopped = true; $("[data-run-title]").textContent = "Останавливаю…"; } catch (e) { stopFresh.disabled = false; CQA.fail($(".page"), e); }
+    });
     const shown = ids.length ? ids : all.map((c) => c.conversation_id);
     $(".card__head .tabs__count", card).textContent = shown.length;
     $("[data-run-title]").textContent = "Идёт оценка";
@@ -103,7 +108,8 @@
       jobs.dataset.live = "1"; // появление строк анимируется один раз, не при каждом опросе
       if (job.status === "done" || left <= 0) {
         clearInterval(timer);
-        $("[data-run-title]").textContent = failN ? "Оценка завершена, есть ошибки" : "Оценка завершена";
+        $("[data-run-title]").textContent = wasStopped ? "Оценка остановлена" : failN ? "Оценка завершена, есть ошибки" : "Оценка завершена";
+        stopFresh.hidden = true;
         $(".bars-loader[data-run-loader]")?.setAttribute("hidden", "");
         $(".steps .btn--primary").disabled = false;
         CQA.fillRail();

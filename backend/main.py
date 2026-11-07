@@ -226,6 +226,14 @@ def get_job(job_id: int):
     return job
 
 
+@app.post("/api/jobs/{job_id}/stop")
+def stop_job(job_id: int):
+    job = get_job(job_id)
+    if job["status"] != "done":
+        evaluator.stop_job(job_id)
+    return job
+
+
 @app.get("/api/evaluations/{evaluation_id}")
 def get_evaluation(evaluation_id: int):
     with closing(db.connect()) as conn:

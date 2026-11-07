@@ -160,6 +160,17 @@ def set_evaluation_running(evaluation_id):
                      "(SELECT job_id FROM evaluations WHERE id=?)", (evaluation_id,))
 
 
+def discard_unfinished(evaluation_id):
+    """Остановленное задание: оценка, которая не дошла до результата, исчезает и не прячет прежнюю."""
+    with closing(connect()) as conn, conn:
+        ev = row(conn, "SELECT job_id FROM evaluations WHERE id=? AND status IN ('queued', 'running')", (evaluation_id,))
+        if ev is None:
+            return
+        conn.execute("DELETE FROM evaluations WHERE id=?", (evaluation_id,))
+        conn.execute("UPDATE jobs SET total=total-1 WHERE id=?", (ev["job_id"],))
+        conn.execute("UPDATE jobs SET status='done' WHERE id=? AND done+failed>=total", (ev["job_id"],))
+
+
 def save_evaluation_result(evaluation_id, results, model, prompt_version, status, error=None):
     with closing(connect()) as conn, conn:
         ev = row(conn, "SELECT * FROM evaluations WHERE id=?", (evaluation_id,))

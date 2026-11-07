@@ -84,7 +84,7 @@ def _setup(client, monkeypatch, replies):
         return reply
 
     monkeypatch.setattr(llm, "generate_json", fake)
-    monkeypatch.setattr(evaluator, "start_job", lambda job_id, ids: evaluator._run(ids))  # синхронно для теста
+    monkeypatch.setattr(evaluator, "start_job", lambda job_id, ids: evaluator._run(job_id, ids))  # синхронно для теста
     record = {**CONV, "transcript": [{k: u[k] for k in ("timestamp", "speaker", "text")} for u in CONV["transcript"]]}
     client.post("/api/conversations/upload?group_id=G", json=record)
     client.post("/api/checklists", json=SEED)
@@ -155,3 +155,23 @@ def test_facts_block():
     assert "Реплик оператора: 2, клиента: 3" in facts
     assert "Факты из транскрипта" in prompts.build_user({**CONV, "transcript": conv["transcript"]}, SEED)
 
+
+
+def test_stopped_job_does_not_call_model(client, monkeypatch):
+    monkeypatch.setattr(evaluator, "_cancelled", set())  # номера заданий в тестах повторяются
+    calls = []
+    monkeypatch.setattr(config, "LLM_PROVIDER", "gemini")
+    monkeypatch.setattr(llm, "generate_json", lambda *a: calls.append(1) or "{}")
+    started = []
+    monkeypatch.setattr(evaluator, "start_job", lambda job_id, ids: started.append((job_id, ids)))
+    record = {**CONV, "transcript": [{k: u[k] for k in ("timestamp", "speaker", "text")} for u in CONV["transcript"]]}
+    client.post("/api/conversations/upload?group_id=G", json=record)
+    client.post("/api/checklists", json=SEED)
+    job = client.post("/api/evaluations", json={"group_id": "G", "all": True, "checklist_id": "chat-quality"}).json()
+    assert client.post(f"/api/jobs/{job['job_id']}/stop").status_code == 200
+    evaluator._run(*started[0])
+    ev = client.get("/api/conversations?group_id=G").json()[0]
+    assert not calls and ev["status"] == "new" and ev["evaluation_id"] is None  # оценки нет: остановленная строка удалена
+    j = client.get(f"/api/jobs/{job['job_id']}").json()
+    assert j["status"] == "done" and j["total"] == 0
+    assert client.post("/api/jobs/9999/stop").status_code == 404

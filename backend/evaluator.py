@@ -24,19 +24,46 @@ def current_model():
     return llm.model_name()
 
 
+_cancelled = set()  # задания, остановленные пользователем
+_current = threading.local()  # задание, которое сейчас выполняет поток
+STOPPED = "остановлено пользователем"
+
+
+def stop_job(job_id: int) -> None:
+    """Новые диалоги задания не стартуют; уже отправленный запрос к модели дорабатывает."""
+    _cancelled.add(job_id)
+
+
+def _check_stopped():
+    if getattr(_current, "job", None) in _cancelled:
+        raise llm.LLMError(STOPPED)
+
+
+def _sleep(seconds):
+    end = time.monotonic() + seconds
+    while time.monotonic() < end:
+        _check_stopped()
+        time.sleep(min(1, max(0, end - time.monotonic())))
+
+
 def start_job(job_id: int, evaluation_ids: list[int]) -> None:
-    threading.Thread(target=_run, args=(evaluation_ids,), daemon=True).start()
+    threading.Thread(target=_run, args=(job_id, evaluation_ids), daemon=True).start()
 
 
-def _run(evaluation_ids):
+def _run(job_id, evaluation_ids):
     with ThreadPoolExecutor(max(1, config.LLM_CONCURRENCY)) as pool:
-        list(pool.map(_evaluate_safe, evaluation_ids))
+        list(pool.map(lambda eid: _evaluate_safe(eid, job_id), evaluation_ids))
 
 
-def _evaluate_safe(eid):
+def _evaluate_safe(eid, job_id=None):
+    _current.job = job_id
     try:
+        _check_stopped()
         _evaluate(eid)
     except Exception as e:  # один сбой не останавливает задание
+        if isinstance(e, llm.LLMError) and str(e) == STOPPED:
+            db.discard_unfinished(eid)
+            return
         traceback.print_exc()
         try:
             db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "error", str(e)[:500])
@@ -58,6 +85,8 @@ def _evaluate(eid):
     try:
         results, errors = _evaluate_parts(conv, checklist)
     except llm.LLMError as e:
+        if str(e) == STOPPED:
+            raise
         db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "error", str(e))
         return
     if errors:
@@ -150,7 +179,9 @@ def _wait_rate():
 def _call(system, user):
     """429/5xx/сеть: до 3 повторов с нарастающей паузой, учитывая Retry-After."""
     for attempt in range(RETRIES + 1):
+        _check_stopped()
         _wait_rate()
+        _check_stopped()
         try:
             return llm.generate_json(system, user, prompts.SCHEMA)
         except llm.LLMError as e:
@@ -158,4 +189,4 @@ def _call(system, user):
                 raise
             pause = e.retry_after or 10 * 2 ** attempt
             print(f"LLM: {e}, повтор через {pause:.0f} с")
-            time.sleep(pause)
+            _sleep(pause)
