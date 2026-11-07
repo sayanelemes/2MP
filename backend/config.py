@@ -14,11 +14,12 @@ if _env.exists():
 
 CQA_API_URL = os.environ.get("CQA_API_URL", "")
 DB_PATH = str(ROOT / os.environ.get("DB_PATH", "cqa.db"))
-LLM_PROVIDERS = [p.strip() for p in (os.environ.get("LLM_PROVIDER", "").lower() or "mock").split(",") if p.strip()]  # mock | gemini | groq; список = запасные при 429/5xx
+LLM_PROVIDERS = [p.strip() for p in (os.environ.get("LLM_PROVIDER", "").lower() or "mock").split(",") if p.strip()]  # mock | gemini | groq | anthropic; список = запасные при 429/5xx
 LLM_PROVIDER = LLM_PROVIDERS[0]
 LLM_MODEL = os.environ.get("LLM_MODEL", "").strip()
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 LLM_RPM = float(os.environ.get("LLM_RPM") or 5)
 LLM_CONCURRENCY = int(os.environ.get("LLM_CONCURRENCY") or 1)
 # звонки не отправляем в бесплатный сервис, пока организаторы не разрешат

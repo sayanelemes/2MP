@@ -85,6 +85,7 @@ LLM_PROVIDER=gemini,groq   # gemini | groq | пусто = заглушка бе�
 LLM_MODEL=                 # пусто: gemini-3.6-flash / openai/gpt-oss-120b
 GEMINI_API_KEY=            # Google AI Studio → Get API key; можно несколько через запятую (из разных проектов Google)
 GROQ_API_KEY=
+ANTHROPIC_API_KEY=       # LLM_PROVIDER=anthropic, модель по умолчанию claude-haiku-5-5 (LLM_MODEL=claude-sonnet-5-5 точнее и дороже)
 LLM_RPM=5                  # запросов в минуту
 LLM_CONCURRENCY=1
 LLM_ALLOW_VOICE=           # true — отправлять и звонки (только после разрешения организаторов)

@@ -17,5 +17,7 @@ services:
         sync: false
       - key: GROQ_API_KEY
         sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
       - key: CQA_API_URL
         sync: false

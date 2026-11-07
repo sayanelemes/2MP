@@ -6,7 +6,7 @@ import httpx
 
 from . import config
 
-DEFAULT_MODELS = {"gemini": "gemini-3.6-flash", "groq": "openai/gpt-oss-120b", "mock": "mock"}
+DEFAULT_MODELS = {"gemini": "gemini-3.6-flash", "groq": "openai/gpt-oss-120b", "anthropic": "claude-haiku-5-5", "mock": "mock"}
 
 
 class LLMError(Exception):
@@ -46,7 +46,7 @@ def _post(url, headers, body):
 
 def _keys(provider):
     """Ключи провайдера: в .env можно перечислить несколько через запятую (для Gemini — из разных проектов Google: квота общая на проект)."""
-    raw = {"gemini": config.GEMINI_API_KEY, "groq": config.GROQ_API_KEY}.get(provider, "")
+    raw = {"gemini": config.GEMINI_API_KEY, "groq": config.GROQ_API_KEY, "anthropic": config.ANTHROPIC_API_KEY}.get(provider, "")
     return [k.strip() for k in raw.split(",") if k.strip()] or [""]
 
 
@@ -77,6 +77,18 @@ def _generate(provider, key, system, user, schema):
             return data["choices"][0]["message"]["content"]
         except (KeyError, IndexError):
             raise LLMError(f"пустой ответ модели: {str(data)[:300]}")
+    if provider == "anthropic":
+        if not key:
+            raise LLMError("ANTHROPIC_API_KEY не задан в .env")
+        data = _post(  # без temperature: на новых моделях Claude нестандартное значение даёт 400; JSON требует системный промпт
+            "https://api.anthropic.com/v1/messages",
+            {"x-api-key": key, "anthropic-version": "2023-06-01"},
+            {"model": _model(provider), "max_tokens": 16000, "system": system,
+             "messages": [{"role": "user", "content": user}]})
+        text = "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
+        if not text:
+            raise LLMError(f"пустой ответ модели: {str(data)[:300]}")
+        return text
     raise LLMError(f"неизвестный LLM_PROVIDER: {provider}")
 
 
