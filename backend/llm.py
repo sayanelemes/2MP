@@ -82,7 +82,7 @@ def _generate(provider, key, system, user, schema):
 
 def generate_json(system: str, user: str, schema: dict) -> str:
     """Один запрос, temperature 0, ответ — строка JSON. При 429/5xx берёт следующий ключ или провайдера из LLM_PROVIDER."""
-    last = None
+    last, waits = None, []
     slots = [(p, k) for p in config.LLM_PROVIDERS for k in _keys(p)]
     for slot in sorted(slots, key=lambda sl: _blocked.get(sl, 0) > time.monotonic()):  # слоты в паузе — в конец
         provider, key = slot
@@ -92,7 +92,10 @@ def generate_json(system: str, user: str, schema: dict) -> str:
             last = e if e.retryable or last is None else last  # повторяемая ошибка важнее: она запускает повторы
             if e.retryable:
                 _blocked[slot] = time.monotonic() + (e.retry_after or COOLDOWN)
+                waits.append(e.retry_after or COOLDOWN)
             continue  # нет ключа, 429 или 5xx: пробуем следующего
         _used.model = _model(provider)
         return out
+    if waits and last.retryable:
+        last.retry_after = min(waits)  # ждать до ближайшего освободившегося слота, а не до самого долгого
     raise last

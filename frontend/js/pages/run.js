@@ -17,7 +17,7 @@
     $(".source__title").textContent = `${CQA.group} — ${all.length} ${CQA.plural(all.length, "диалог", "диалога", "диалогов")}`;
     $(".source__meta").textContent = `${chats} чатов и ${all.length - chats} звонков`;
     $(".source .btn").hidden = true;
-    const det = $(".steps details"); if (det) det.hidden = true;
+    setupUpload();
     $("#cl").innerHTML = versions.map((v, i) => `<option value="${v.version}">${E(v.name)}, версия ${v.version}${i === 0 ? " — активная" : ""}</option>`).join("");
     const ver = versions[0];
     $(".steps .step:nth-child(2) .field__hint").innerHTML = `Список версий хранится на сервере. <a href="checklist.html">Открыть в конструкторе</a>`;
@@ -37,6 +37,26 @@
     $$(".run-hud, [data-run-hud]").forEach((x) => (x.hidden = true));
     const jobsCard = $("[data-run-jobs]").closest(".card"); jobsCard.hidden = true;
     const alert = $(".alert--amber"); if (alert) alert.hidden = true;
+  }
+
+  // Загрузка своего набора: файл уходит в новую группу, затем открывается эта группа.
+  function setupUpload() {
+    const box = $(".steps details .stack"), group = $("#group", box);
+    group.value = "MYSET";
+    $("#api", box).closest(".field").hidden = true;
+    $(".field__hint", box).textContent = "Файл: одна запись, массив записей или ответ API. Он попадёт в группу с этим именем, DEV не изменится.";
+    const [apiBtn, fileLabel] = $$(".row > *", box), input = $("input[type=file]", fileLabel);
+    const go = async (fn) => {
+      const g = group.value.trim();
+      if (!g) return CQA.fail($(".page"), new Error("Укажите group_id"));
+      try { await fn(g); location.href = `run.html?g=${encodeURIComponent(g)}`; } catch (e) { CQA.fail($(".page"), e); }
+    };
+    apiBtn.textContent = "Загрузить по API (адрес из .env)";
+    apiBtn.addEventListener("click", () => go((g) => CQA.api.post("/api/datasets/import", { group_id: g })));
+    input.addEventListener("change", () => input.files[0] && go(async (g) => {
+      let body; try { body = JSON.parse(await input.files[0].text()); } catch { throw new Error("Файл — не JSON"); }
+      await CQA.api.post(`/api/conversations/upload?group_id=${encodeURIComponent(g)}`, body);
+    }));
   }
 
   async function start(ver, version, ids, whole) {
@@ -70,7 +90,7 @@
       const scored = shown.map((i) => by[i]).filter((c) => c && c.status === "done" && c.final_total !== null);
       $("[data-run-avg]").textContent = scored.length ? N(scored.reduce((s, c) => s + c.final_total, 0) / scored.length) : "—";
       $("[data-run-eta]").textContent = run.reused ? `${run.reused} из кэша, без запросов к модели` : "";
-      jobs.innerHTML = shown.map((i, k) => {
+      const html = shown.map((i, k) => {
         const c = by[i]; if (!c) return "";
         const running = (job.status !== "done" && c.status === "queued") ? "queued" : c.status;
         const cls = c.status === "done" ? "done" : c.status === "failed" ? "error" : c.status === "needs_review" ? "error" : running === "running" ? "running" : "queued";
@@ -79,6 +99,8 @@
         const note = cls === "done" ? "Готово" : ["needs_review", "failed", "error"].includes(c.status) ? E(reasons[c.evaluation_id] || "Не оценён") : cls === "running" ? "Оценивается" : "В очереди";
         return `<li class="job job--${cls}" style="--i:${k}"><span class="job__status">${icon}</span><a class="row-link" href="${CQA.pageFor(c)}">${E(i)}</a>${CQA.langTag(c.language)}<span class="job__note">${note}</span><span class="job__end">${end}</span></li>`;
       }).join("");
+      if (html !== jobs.dataset.html) { jobs.innerHTML = html; jobs.dataset.html = html; }
+      jobs.dataset.live = "1"; // появление строк анимируется один раз, не при каждом опросе
       if (job.status === "done" || left <= 0) {
         clearInterval(timer);
         $("[data-run-title]").textContent = failN ? "Оценка завершена, есть ошибки" : "Оценка завершена";

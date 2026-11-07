@@ -2,7 +2,10 @@
 (function () {
   const CQA = (window.CQA = window.CQA || {});
   const BASE = window.CQA_API_BASE || "";
-  const GROUP = new URLSearchParams(location.search).get("g") || "DEV";
+  // Группа запоминается в браузере: ?g= выбирает и сохраняет, без параметра берётся последняя выбранная.
+  const store = (v) => { try { return v === undefined ? localStorage.getItem("cqa.group") : localStorage.setItem("cqa.group", v); } catch { return null; } };
+  const GROUP = new URLSearchParams(location.search).get("g") || store() || "DEV";
+  store(GROUP);
   CQA.group = GROUP;
   CQA.CHECKLIST = "chat-quality";
 

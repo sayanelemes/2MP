@@ -1,34 +1,405 @@
 [
-  {
-    "group_id": "DEV",
-    "conversation_id": "p1-ru-001",
-    "holdout": false,
-    "example": true,
-    "answers": {
-      "c01": "yes",
-      "c02": "NA",
-      "c03": "NA",
-      "c04": 15,
-      "c05": "yes",
-      "c06": 10,
-      "c07": "no",
-      "c08": "no"
-    }
-  },
-  {
-    "group_id": "DEV",
-    "conversation_id": "p1-ru-030",
-    "holdout": true,
-    "example": true,
-    "answers": {
-      "c01": "yes",
-      "c02": "yes",
-      "c03": "NA",
-      "c04": 20,
-      "c05": "yes",
-      "c06": 10,
-      "c07": "yes",
-      "c08": "no"
-    }
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-001",
+  "holdout": false,
+  "example": true,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 15,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "no",
+   "c08": "no"
   }
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-030",
+  "holdout": true,
+  "example": true,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  }
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-01",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Эталон: эмпатия, уточнение, идентификация до проверки, итог и прощание."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-02",
+  "holdout": false,
+  "answers": {
+   "c01": "no",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Поздоровался, но не представился."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-03",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "no",
+   "c04": 20,
+   "c05": "no",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c02",
+   "c04",
+   "c07"
+  ],
+  "note": "Раскрыл баланс счёта без идентификации."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-04",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": "NA",
+   "c05": "yes",
+   "c06": 10,
+   "c07": "NA",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Клиент ушёл до формулировки вопроса. Итог 100."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-05",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Предупредил об ожидании 2–3 минуты и поблагодарил."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-06",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 10,
+   "c05": "yes",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c05",
+   "c07"
+  ],
+  "note": "Вопрос о комиссии не закрыт, пауза 4 минуты без предупреждения, клиент переспросил."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-07",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 10,
+   "c05": "no",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c04",
+   "c06",
+   "c07"
+  ],
+  "note": "Переспросил известное и оскорбил клиента."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-ru-08",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 5,
+   "c05": "no",
+   "c06": 7,
+   "c07": "no",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c04",
+   "c06"
+  ],
+  "note": "Не уточнил проблему, отмахнулся, закрыл чат без прощания."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-kz-01",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Эталон на казахском."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-kz-02",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Идентификация перед сменой номера."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-kz-03",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 15,
+   "c05": "no",
+   "c06": 10,
+   "c07": "no",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c04",
+   "c05"
+  ],
+  "note": "Просит перевести деньги лично себе за подсказку, закрыл чат."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-kz-04",
+  "holdout": false,
+  "answers": {
+   "c01": "no",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "NA",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Поздоровался по-русски с казахоязычным клиентом. Связь прервалась."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-kz-05",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "yes",
+   "c04": 15,
+   "c05": "no",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c04",
+   "c07"
+  ],
+  "note": "Проигнорировал недовольство, повторил один и тот же ответ."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-en-01",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Эталон на английском."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-en-02",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c06"
+  ],
+  "note": "Переспросил то, что клиент уже написал."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-en-03",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 0,
+   "c05": "no",
+   "c06": 0,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c05",
+   "c07"
+  ],
+  "note": "Противоречивые ответы, клиент ничего не понял."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-en-04",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 15,
+   "c05": "no",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c04",
+   "c05",
+   "c07"
+  ],
+  "note": "Просит перевести деньги на личную карту."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-call-01",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Звонок-эталон: идентификация по коду, предупредил об удержании."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-call-02",
+  "holdout": false,
+  "answers": {
+   "c01": "no",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "no",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c07"
+  ],
+  "note": "Не представился, удержание больше 3 минут без предупреждения, проигнорировал недовольство."
+ },
+ {
+  "group_id": "TEST",
+  "conversation_id": "t-call-03",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Много ошибок распознавания: за них не штрафуем."
+ }
 ]

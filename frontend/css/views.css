@@ -338,6 +338,7 @@ details[open] .summary-link .icon { transform: rotate(90deg); }
 .jobs { display: grid; }
 .job { position: relative; overflow: hidden; display: grid; grid-template-columns: 26px 110px auto minmax(0, 1fr) auto; gap: var(--s-3); align-items: center; padding: 12px var(--s-5); border-bottom: 1px solid var(--line); animation: rise-in 520ms var(--ease-out) both; animation-delay: calc(500ms + var(--i, 0) * 80ms); }
 .job:last-child { border-bottom: 0; }
+[data-run-jobs][data-live] .job { animation: none; }
 .job__status { display: grid; place-items: center; }
 .job__status .icon { width: 19px; height: 19px; }
 .job__note { color: var(--ink-3); font-size: var(--fs-13); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
