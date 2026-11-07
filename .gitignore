@@ -13,3 +13,4 @@ __pycache__/
 # Локальное
 graphify-out/
 .claude/
+eval_report.json

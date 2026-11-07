@@ -10,7 +10,10 @@ from concurrent.futures import ThreadPoolExecutor
 
 from . import config, db, llm, prompts, validator
 
-PROMPT_VERSION = prompts.PROMPT_VERSION if config.LLM_PROVIDER != "mock" else "mock"
+# версия в ключе кэша учитывает режимы: результат другого режима не подменяет этот
+PROMPT_VERSION = "mock" if config.LLM_PROVIDER == "mock" else (
+    prompts.PROMPT_VERSION + ("-sections" if config.EVAL_MODE == "sections" else "") + ("-recheck" if config.CRITICAL_RECHECK else "")
+    + ("" if config.PROMPT_FACTS else "-nofacts") + ("" if config.QUOTE_RETRY else "-noretry"))
 RETRIES = 3
 
 _rate_lock = threading.Lock()
@@ -52,22 +55,86 @@ def _evaluate(eid):
         db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "needs_review",
                                   "звонки не отправляются в ИИ до разрешения организаторов (LLM_ALLOW_VOICE)")
         return
+    try:
+        results, errors = _evaluate_parts(conv, checklist)
+    except llm.LLMError as e:
+        db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "error", str(e))
+        return
+    if errors:
+        db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "needs_review", "; ".join(errors)[:1000])
+        return
+    db.save_evaluation_result(eid, results, current_model(), PROMPT_VERSION, "done")
+
+
+def _subset(checklist, criteria):
+    return {**checklist, "criteria": criteria}
+
+
+def _evaluate_parts(conv, checklist):
+    """Режим single/sections и перепроверка грубых нарушений. Возвращает (results, errors)."""
+    criteria = checklist["criteria"]
+    if config.EVAL_MODE == "sections":
+        parts = [[c for c in criteria if c.get("section") == s] for s in dict.fromkeys(c.get("section") for c in criteria)]
+    else:
+        parts = [criteria]
+    results, errors = [], []
+    for part in parts:
+        r, e = _ask(conv, _subset(checklist, part))
+        results += r
+        errors += e
+    if errors:
+        return [], errors
+    order = {c["id"]: i for i, c in enumerate(criteria)}
+    results.sort(key=lambda r: order[r["criterion_id"]])
+    critical = [c for c in criteria if c.get("is_critical")]
+    if config.CRITICAL_RECHECK and critical:
+        second, e = _ask(conv, _subset(checklist, critical))
+        by2 = {r["criterion_id"]: r for r in second}  # сбой повторной проверки не мешает: решает основная
+        speakers = {u["id"]: u["speaker"] for u in conv["transcript"]}
+        results = [_merge_critical(r, by2.get(r["criterion_id"]), speakers) if r["criterion_id"] in {c["id"] for c in critical} else r
+                   for r in results]
+    return results, []
+
+
+def _found(r, speakers):
+    return bool(r) and r["answer"] == "yes" and any(e["verified"] and speakers.get(e["id"]) == "operator" for e in r["evidence"])
+
+
+def _merge_critical(main, second, speakers):
+    """yes только если хотя бы одна проверка дала yes с подтверждённой цитатой из реплики оператора."""
+    for name, r in (("основной", main), ("повторной", second)):
+        if _found(r, speakers):
+            return {**r, "reason": f"Нарушение найдено при {name} проверке. {r['reason']}"}
+    note = " Нарушение не засчитано: нет подтверждённой цитаты оператора." if main["answer"] == "yes" else ""
+    return {**main, "answer": "no", "reason": main["reason"] + note}
+
+
+def _unverified(results):
+    """Критерии с ответом yes или баллом шкалы, у которых все цитаты не найдены в репликах."""
+    return [r for r in results if r["answer"] not in ("no", "NA") and r["evidence"] and not any(e["verified"] for e in r["evidence"])]
+
+
+def _ask(conv, checklist):
+    """Запрос по подмножеству критериев. Не больше 2 запросов: повтор при ошибке проверки или неподтверждённых цитатах."""
     user = prompts.build_user(conv, checklist)
-    message = user
-    for attempt in range(2):  # ошибка JSON или правил: один повтор с текстом ошибки
-        try:
-            raw = _call(prompts.SYSTEM, message)
-        except llm.LLMError as e:
-            db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "error", str(e))
-            return
+    message, fallback, errors = user, None, []
+    for attempt in range(2):
+        raw = _call(prompts.SYSTEM, message)
         results, errors = validator.validate(raw, conv, checklist)
-        if not errors:
-            db.save_evaluation_result(eid, results, current_model(), PROMPT_VERSION, "done")
-            return
-        print(f"оценка {eid}, попытка {attempt + 1}: {'; '.join(errors)[:300]} | ответ: {(raw or '')[:200]}")
-        message = (user + "\n\nПредыдущий ответ отклонён проверкой: " + "; ".join(errors)
-                   + "\nВерни исправленный JSON целиком.")
-    db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "needs_review", "; ".join(errors)[:1000])
+        if errors:
+            print(f"оценка {conv['conversation_id']}, попытка {attempt + 1}: {'; '.join(errors)[:300]} | ответ: {(raw or '')[:200]}")
+            message = (user + "\n\nПредыдущий ответ отклонён проверкой: " + "; ".join(errors)
+                       + "\nВерни исправленный JSON целиком.")
+            continue
+        bad = _unverified(results) if config.QUOTE_RETRY else []
+        if bad and attempt == 0:
+            fallback = results
+            lost = ", ".join(f"{r['criterion_id']} ({', '.join(e['id'] for e in r['evidence'])})" for r in bad)
+            message = (user + f"\n\nЦитаты не найдены в указанных репликах: {lost}. "
+                       "Скопируй цитату дословно из текста реплики или измени вывод. Верни JSON целиком.")
+            continue
+        return results, []
+    return (fallback, []) if fallback else ([], errors)
 
 
 def _wait_rate():

@@ -136,3 +136,21 @@ def test_fallback_provider_on_429(monkeypatch):
     monkeypatch.setattr(llm, "_blocked", {})
     with pytest.raises(llm.LLMError):
         llm.generate_json("s", "u", {})
+
+
+def test_facts_block():
+    conv = {"transcript": [
+        {"id": "u1", "t": 0, "timestamp": "00:00", "speaker": "client", "text": "Сәлем"},
+        {"id": "u2", "t": 3, "timestamp": "00:03", "speaker": "bot", "text": "Hello"},
+        {"id": "u3", "t": 4, "timestamp": "00:04", "speaker": "system", "text": "Escalation to agent."},
+        {"id": "u4", "t": 100, "timestamp": "01:40", "speaker": "operator", "text": "Привет"},
+        {"id": "u5", "t": 110, "timestamp": "01:50", "speaker": "client", "text": "Вопрос"},
+        {"id": "u6", "t": 260, "timestamp": "04:20", "speaker": "operator", "text": "Ответ"},
+        {"id": "u7", "t": 270, "timestamp": "04:30", "speaker": "client", "text": "Спасибо"}]}
+    facts = prompts.facts_block(conv)
+    assert "Первая реплика оператора: u4 (01:40)" in facts and "Реплик бота: 1" in facts
+    assert "[u3] Escalation to agent." in facts and "Последним говорил: client (u7)" in facts
+    assert "Последняя реплика оператора: u6" in facts
+    assert "u5 → u6: 02:30" in facts and "u1 → u4" not in facts  # первая реакция в паузы не входит
+    assert "Реплик оператора: 2, клиента: 3" in facts
+    assert "Факты из транскрипта" in prompts.build_user({**CONV, "transcript": conv["transcript"]}, SEED)

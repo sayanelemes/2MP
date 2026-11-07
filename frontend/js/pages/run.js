@@ -6,6 +6,8 @@
   const params = new URLSearchParams(location.search);
   const picked = (params.get("ids") || "").split(",").filter(Boolean);
   let all = [], versions = [], timer = null;
+  const reasons = {};  // evaluation_id → понятная причина, почему диалог не оценён
+  const why = (e) => (/LLM_ALLOW_VOICE/.test(e) ? "Звонки не отправляются в ИИ: нужна настройка LLM_ALLOW_VOICE=true в .env (после разрешения организаторов)." : e || "Диалог не оценён автоматически.");
 
   const radio = (name, title, desc, checked, value) => `<label class="choice"><input type="radio" name="${name}" value="${value}"${checked ? " checked" : ""}><span class="choice__title">${title}</span><span class="choice__desc">${desc}</span></label>`;
   const idsOf = (scope) => (scope === "all" ? all.map((c) => c.conversation_id) : scope === "new" ? all.filter((c) => c.status === "new").map((c) => c.conversation_id) : picked.filter((i) => all.some((c) => c.conversation_id === i)));
@@ -58,6 +60,8 @@
       const [job, list] = await Promise.all([CQA.api.job(run.job_id), CQA.api.conversations()]);
       all = list;
       const by = Object.fromEntries(list.map((c) => [c.conversation_id, c]));
+      await Promise.all(list.filter((c) => shown.includes(c.conversation_id) && ["needs_review", "failed", "error"].includes(c.status) && !(c.evaluation_id in reasons))
+        .map(async (c) => { reasons[c.evaluation_id] = why((await CQA.api.evaluation(c.evaluation_id).catch(() => ({}))).error); }));
       const doneN = job.done, failN = job.failed, left = job.total - doneN - failN;
       $("[data-run-count]").textContent = doneN + failN;
       $(".run-hud__count small").textContent = ` из ${job.total}`;
@@ -72,7 +76,7 @@
         const cls = c.status === "done" ? "done" : c.status === "failed" ? "error" : c.status === "needs_review" ? "error" : running === "running" ? "running" : "queued";
         const icon = cls === "done" ? ICON("check-circle") : cls === "error" ? ICON("x-circle") : cls === "running" ? '<span class="bars-loader"><i></i><i></i><i></i></span>' : "";
         const end = cls === "done" ? `<span class="score score--${CQA.scoreClass(c.final_total)}"><span class="score__value">${N(c.final_total)}</span></span>` : "";
-        const note = cls === "done" ? "Готово" : c.status === "needs_review" ? "Нужна проверка: не оценён автоматически" : c.status === "failed" ? "Ошибка оценки" : cls === "running" ? "Оценивается" : "В очереди";
+        const note = cls === "done" ? "Готово" : ["needs_review", "failed", "error"].includes(c.status) ? E(reasons[c.evaluation_id] || "Не оценён") : cls === "running" ? "Оценивается" : "В очереди";
         return `<li class="job job--${cls}" style="--i:${k}"><span class="job__status">${icon}</span><a class="row-link" href="${CQA.pageFor(c)}">${E(i)}</a>${CQA.langTag(c.language)}<span class="job__note">${note}</span><span class="job__end">${end}</span></li>`;
       }).join("");
       if (job.status === "done" || left <= 0) {

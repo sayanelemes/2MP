@@ -23,5 +23,13 @@ LLM_RPM = float(os.environ.get("LLM_RPM") or 5)
 LLM_CONCURRENCY = int(os.environ.get("LLM_CONCURRENCY") or 1)
 # звонки не отправляем в бесплатный сервис, пока организаторы не разрешат
 LLM_ALLOW_VOICE = os.environ.get("LLM_ALLOW_VOICE", "").strip().lower() in ("1", "true", "yes")
+# блок «фактов» перед транскриптом (первая реплика оператора, системные события, паузы)
+PROMPT_FACTS = os.environ.get("PROMPT_FACTS", "true").strip().lower() not in ("0", "false", "no")
+# single: один запрос на диалог; sections: по запросу на секцию чек-листа
+EVAL_MODE = os.environ.get("EVAL_MODE", "single").strip().lower()
+# отдельный запрос по грубым нарушениям: yes, если нашла любая проверка с подтверждённой цитатой оператора
+CRITICAL_RECHECK = os.environ.get("CRITICAL_RECHECK", "").strip().lower() in ("1", "true", "yes")
+# один повтор, если у yes или балла шкалы все цитаты не найдены в тексте реплик
+QUOTE_RETRY = os.environ.get("QUOTE_RETRY", "true").strip().lower() not in ("0", "false", "no")
 FRONTEND_DIR = ROOT / "frontend"
 SEED_CHECKLIST = Path(__file__).resolve().parent / "seed_checklist.json"
