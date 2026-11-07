@@ -1,4 +1,7 @@
 """Весь вызов модели. Смена провайдера — только через .env (LLM_PROVIDER, LLM_MODEL, ключ)."""
+import threading
+import time
+
 import httpx
 
 from . import config
@@ -14,8 +17,17 @@ class LLMError(Exception):
         self.retry_after = retry_after
 
 
+_used = threading.local()  # модель, которая реально ответила в этом потоке
+_blocked = {}  # провайдер -> до какого момента пропускаем после 429/5xx
+COOLDOWN = 60
+
+
+def _model(provider):
+    return (config.LLM_MODEL if provider == config.LLM_PROVIDER else "") or DEFAULT_MODELS.get(provider, provider)
+
+
 def model_name():
-    return config.LLM_MODEL or DEFAULT_MODELS.get(config.LLM_PROVIDER, config.LLM_PROVIDER)
+    return getattr(_used, "model", None) or _model(config.LLM_PROVIDER)
 
 
 def _post(url, headers, body):
@@ -32,14 +44,19 @@ def _post(url, headers, body):
     return resp.json()
 
 
-def generate_json(system: str, user: str, schema: dict) -> str:
-    """Один запрос к модели, temperature 0, ответ — строка JSON."""
-    if config.LLM_PROVIDER == "gemini":
-        if not config.GEMINI_API_KEY:
+def _keys(provider):
+    """Ключи провайдера: в .env можно перечислить несколько через запятую (для Gemini — из разных проектов Google: квота общая на проект)."""
+    raw = {"gemini": config.GEMINI_API_KEY, "groq": config.GROQ_API_KEY}.get(provider, "")
+    return [k.strip() for k in raw.split(",") if k.strip()] or [""]
+
+
+def _generate(provider, key, system, user, schema):
+    if provider == "gemini":
+        if not key:
             raise LLMError("GEMINI_API_KEY не задан в .env")
         data = _post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{model_name()}:generateContent",
-            {"x-goog-api-key": config.GEMINI_API_KEY},  # ключ в заголовке, а не в адресе: не попадёт в логи
+            f"https://generativelanguage.googleapis.com/v1beta/models/{_model(provider)}:generateContent",
+            {"x-goog-api-key": key},  # ключ в заголовке, а не в адресе: не попадёт в логи
             {"systemInstruction": {"parts": [{"text": system}]},
              "contents": [{"role": "user", "parts": [{"text": user}]}],
              "generationConfig": {"temperature": 0, "responseMimeType": "application/json",
@@ -48,16 +65,34 @@ def generate_json(system: str, user: str, schema: dict) -> str:
             return "".join(p.get("text", "") for p in data["candidates"][0]["content"]["parts"])
         except (KeyError, IndexError):
             raise LLMError(f"пустой ответ модели: {str(data)[:300]}")
-    if config.LLM_PROVIDER == "groq":
-        if not config.GROQ_API_KEY:
+    if provider == "groq":
+        if not key:
             raise LLMError("GROQ_API_KEY не задан в .env")
         data = _post(
             "https://api.groq.com/openai/v1/chat/completions",
-            {"Authorization": f"Bearer {config.GROQ_API_KEY}"},
-            {"model": model_name(), "temperature": 0, "response_format": {"type": "json_object"},
+            {"Authorization": f"Bearer {key}"},
+            {"model": _model(provider), "temperature": 0, "response_format": {"type": "json_object"},
              "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]})
         try:
             return data["choices"][0]["message"]["content"]
         except (KeyError, IndexError):
             raise LLMError(f"пустой ответ модели: {str(data)[:300]}")
-    raise LLMError(f"неизвестный LLM_PROVIDER: {config.LLM_PROVIDER}")
+    raise LLMError(f"неизвестный LLM_PROVIDER: {provider}")
+
+
+def generate_json(system: str, user: str, schema: dict) -> str:
+    """Один запрос, temperature 0, ответ — строка JSON. При 429/5xx берёт следующий ключ или провайдера из LLM_PROVIDER."""
+    last = None
+    slots = [(p, k) for p in config.LLM_PROVIDERS for k in _keys(p)]
+    for slot in sorted(slots, key=lambda sl: _blocked.get(sl, 0) > time.monotonic()):  # слоты в паузе — в конец
+        provider, key = slot
+        try:
+            out = _generate(provider, key, system, user, schema)
+        except LLMError as e:
+            last = e if e.retryable or last is None else last  # повторяемая ошибка важнее: она запускает повторы
+            if e.retryable:
+                _blocked[slot] = time.monotonic() + (e.retry_after or COOLDOWN)
+            continue  # нет ключа, 429 или 5xx: пробуем следующего
+        _used.model = _model(provider)
+        return out
+    raise last

@@ -207,7 +207,7 @@
       checklist = ev ? await CQA.api.get(`/api/checklists/${ev.checklist_id}/versions/${ev.checklist_version}`) : null;
       crits = checklist ? checklist.criteria : [];
     } catch (e) { CQA.fail($(".page"), e); return; }
-    document.title = `${id} · CQA`;
+    document.title = `${id} · 2MP`;
     $(".cmdbar__crumbs [aria-current]").textContent = id;
     const call = CQA.isCall(conv);
     const first = conv.transcript.find((u) => u.speaker === "client");

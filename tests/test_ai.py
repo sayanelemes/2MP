@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from backend import checklists, config, db, evaluator, llm, prompts
 from backend.validator import validate
 
@@ -107,3 +109,30 @@ def test_needs_review_and_error(client, monkeypatch):
 def test_provider_error(client, monkeypatch):
     job, ev, _ = _setup(client, monkeypatch, [llm.LLMError("провайдер ответил 400: bad")])
     assert ev["status"] == "error" and "400" in ev["error"] and job["failed"] == 1
+
+
+def test_fallback_provider_on_429(monkeypatch):
+    """Лимит у первого провайдера → ответ даёт второй, в оценку идёт его модель; провайдер в паузе пропускается."""
+    from backend import llm
+    calls = []
+
+    def fake(provider, key, *a):
+        calls.append((provider, key))
+        if provider == "gemini":
+            raise llm.LLMError("429", retryable=True, status=429)
+        return "{}"
+    monkeypatch.setattr(config, "LLM_PROVIDERS", ["gemini", "groq"])
+    monkeypatch.setattr(config, "LLM_PROVIDER", "gemini")
+    monkeypatch.setattr(llm, "_generate", fake)
+    monkeypatch.setattr(llm, "_blocked", {})
+    monkeypatch.setattr(config, "GROQ_API_KEY", "")  # не зависеть от реального .env
+    monkeypatch.setattr(config, "GEMINI_API_KEY", "k1, k2")  # два ключа Gemini: оба в 429 → Groq
+    assert llm.generate_json("s", "u", {}) == "{}" and calls == [("gemini", "k1"), ("gemini", "k2"), ("groq", "")]
+    assert llm.model_name() == llm.DEFAULT_MODELS["groq"]
+    calls.clear()
+    llm.generate_json("s", "u", {})
+    assert calls == [("groq", "")]
+    monkeypatch.setattr(llm, "_generate", lambda *a: (_ for _ in ()).throw(llm.LLMError("429", retryable=True)))
+    monkeypatch.setattr(llm, "_blocked", {})
+    with pytest.raises(llm.LLMError):
+        llm.generate_json("s", "u", {})

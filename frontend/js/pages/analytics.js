@@ -135,7 +135,7 @@
     ev = pick ? await CQA.api.evaluation(pick.id) : null;
     total = conv.duration || Math.max(1, ...conv.transcript.map((u) => sec(u.t)));
     history.replaceState(null, "", `?id=${encodeURIComponent(id)}&g=${CQA.group}`);
-    document.title = `${id} · Анализ разговора · CQA`;
+    document.title = `${id} · Анализ разговора · 2MP`;
     const first = conv.transcript.find((u) => u.speaker === "client");
     $(".meta-row").innerHTML = `${CQA.channelTag(conv)}${CQA.langTag(conv.language)}<span class="tag">${ICON("clock")}${CQA.mmss(total)}</span>${CQA.isCall(conv) ? `<span class="tag tag--amber">${ICON("mic")}Транскрипт ASR</span>` : ""}`;
     const h1 = $(".dlg-id"); h1.removeAttribute("data-decrypt"); h1.textContent = id;
