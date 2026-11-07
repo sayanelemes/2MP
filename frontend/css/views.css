@@ -76,7 +76,7 @@
 .lang-chip[aria-pressed="true"] { color: #02160B; background: var(--g-signal); border-color: transparent; box-shadow: 0 0 16px -4px var(--signal-glow); }
 
 .selection-bar { display: flex; align-items: center; gap: var(--s-3); padding: var(--s-2) var(--s-5); border-bottom: 1px solid var(--line); background: linear-gradient(90deg, rgba(46, 229, 126, 0.14), transparent); font-size: var(--fs-13); font-weight: 650; color: var(--signal); }
-.request { max-width: 46ch; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.request { max-width: clamp(12ch, 15vw, 40ch); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .flags { display: inline-flex; gap: 4px; flex-wrap: wrap; }
 /* Быстрое действие в строке: проявляется при наведении */
 .row-go { width: 32px; height: 32px; display: grid; place-items: center; border-radius: var(--r-sm); color: var(--signal); border: 1px solid var(--line-2); opacity: 0; transform: translateX(-6px); transition: opacity var(--t-fast) var(--ease-out), transform var(--t-med) var(--ease-out), background-color var(--t-fast); }
@@ -713,3 +713,7 @@ a.coach-chip { cursor: pointer; font-weight: 700; color: var(--ok); border-color
 .coachcard__was { color: var(--ink-3); } .coachcard__was span { color: var(--bad); }
 .coachcard__should { color: var(--ink); font-weight: 700; } .coachcard__should span { color: var(--ok); }
 .coachcard__none { margin: 0; color: var(--ink-2); font-size: 14px; }
+
+/* таблица диалогов помещается без горизонтальной прокрутки: колонки «Реплик» и «Длит.» прячутся на узких экранах, отметки переносятся */
+.table .flags { display: flex; flex-wrap: wrap; gap: 4px; }
+@media (max-width: 1500px) { .table th:nth-child(5), .table td:nth-child(5), .table th:nth-child(6), .table td:nth-child(6) { display: none; } }

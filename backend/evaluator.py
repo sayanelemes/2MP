@@ -1,8 +1,7 @@
 """Очередь оценки: фоновый поток, лимит запросов, повторы, проверка ответа.
 
-LLM_PROVIDER пуст или mock — детерминированная заглушка без сети (сайт работает без ключей).
+Модель вызывается всегда; ключ и провайдер задаются в .env.
 """
-import hashlib
 import threading
 import time
 import traceback
@@ -11,10 +10,11 @@ from concurrent.futures import ThreadPoolExecutor
 from . import config, db, llm, prompts, validator
 
 # версия в ключе кэша учитывает режимы: результат другого режима не подменяет этот
-PROMPT_VERSION = "mock" if config.LLM_PROVIDER == "mock" else (
+PROMPT_VERSION = (
     prompts.PROMPT_VERSION + ("-sections" if config.EVAL_MODE == "sections" else "") + ("-recheck" if config.CRITICAL_RECHECK else "")
     + ("" if config.PROMPT_FACTS else "-nofacts") + ("" if config.QUOTE_RETRY else "-noretry"))
 RETRIES = 3
+_stub = None
 
 _rate_lock = threading.Lock()
 _next_call = 0.0
@@ -48,8 +48,8 @@ def _evaluate(eid):
     db.set_evaluation_running(eid)
     ctx = db.get_evaluation_context(eid)
     conv, checklist = ctx["conversation"], ctx["checklist"]
-    if config.LLM_PROVIDER == "mock":
-        db.save_evaluation_result(eid, _mock(ctx), current_model(), PROMPT_VERSION, "done")
+    if _stub and config.LLM_PROVIDER == "mock":  # только тесты (tests/conftest.py), в работе _stub пуст
+        db.save_evaluation_result(eid, _stub(ctx), current_model(), PROMPT_VERSION, "done")
         return
     if conv["channel"] == "voice call" and not config.LLM_ALLOW_VOICE:
         db.save_evaluation_result(eid, [], current_model(), PROMPT_VERSION, "needs_review",
@@ -159,30 +159,3 @@ def _call(system, user):
             pause = e.retry_after or 10 * 2 ** attempt
             print(f"LLM: {e}, повтор через {pause:.0f} с")
             time.sleep(pause)
-
-
-def _mock(ctx):
-    conv = ctx["conversation"]
-    utts = conv["transcript"]
-    operator = [u for u in utts if u["speaker"] == "operator"] or utts
-    results = []
-    for c in ctx["checklist"]["criteria"]:
-        h = int(hashlib.sha256(f"{conv['conversation_id']}|{c['id']}".encode()).hexdigest(), 16)
-        if c.get("is_critical"):
-            answer = "yes" if h % 10 == 0 else "no"
-        else:
-            options = ["yes", "yes", "no"] if c["type"] == "yes_no" else [s["value"] for s in c["steps"]]
-            if c.get("na_allowed"):
-                options.append("NA")
-            answer = options[h % len(options)]
-        u = operator[h % len(operator)]
-        results.append({
-            "criterion_id": c["id"],
-            "answer": answer,
-            "reason": "Заглушка: ответ выбран детерминированно, модель не вызывалась.",
-            "evidence": [] if answer == "NA" else [{"id": u["id"], "quote": u["text"][:200], "verified": True}],
-            "checked_range": {"from": utts[0]["id"], "to": utts[-1]["id"]},
-            "suggestion": "" if answer in ("yes", "NA") or c.get("is_critical") or (c["type"] == "scale" and answer == max(s["value"] for s in c["steps"]))
-                          else "Подскажите, остались ли у вас ещё вопросы?",
-        })
-    return results

@@ -7,7 +7,7 @@ import httpx
 
 from . import config
 
-DEFAULT_MODELS = {"gemini": "gemini-3.6-flash", "groq": "openai/gpt-oss-120b", "anthropic": "claude-haiku-5-5", "mock": "mock"}
+DEFAULT_MODELS = {"gemini": "gemini-3.6-flash", "groq": "openai/gpt-oss-120b", "anthropic": "claude-haiku-5-5"}
 
 
 class LLMError(Exception):

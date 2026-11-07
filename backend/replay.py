@@ -83,8 +83,6 @@ def _store(key, evaluation_id, kind, turn_id, text, response):
 
 
 def _generate(system, user, schema):
-    if config.LLM_PROVIDER == "mock":
-        raise HTTPException(503, "Переигровка работает только с ИИ: задайте LLM_PROVIDER и ключ в .env")
     try:
         return llm.generate_json(system, user, schema)
     except llm.LLMError as e:
