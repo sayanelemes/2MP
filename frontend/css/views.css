@@ -685,11 +685,30 @@ a.reason:hover { border-color: var(--amber-line); color: var(--ink); transform: 
 }
 
 /* Как надо было сказать: «призрак» реплики оператора, которой не было */
-.coach { display: grid; justify-items: end; padding: 0 38px 10px 0; list-style: none; }
-.coach__box { max-width: 76ch; padding: 10px 14px; border: 1.5px dashed var(--ok); border-radius: var(--r-lg) 6px var(--r-lg) var(--r-lg); background: var(--ok-bg); box-shadow: none; display: grid; gap: 4px; }
-.coach__head { font-size: var(--fs-12, 12px); color: var(--ink-3); }
-.coach__text { margin: 0; color: var(--ink); }
+.coach { display: grid; justify-items: end; padding: 4px 38px 14px 0; list-style: none; }
+.coach__box { max-width: 76ch; padding: 14px 18px; border: 2px dashed var(--ok); border-radius: var(--r-lg) 6px var(--r-lg) var(--r-lg); background: color-mix(in oklab, var(--ok) 20%, transparent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--ok) 10%, transparent), 0 8px 24px -12px var(--ok); display: grid; gap: 6px; }
+.coach__head { font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--ok); }
+.coach__badge { display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; padding: 3px 10px; border-radius: 999px; background: var(--ok); color: #02160B; font-weight: 800; letter-spacing: .02em; }
+.coach__text { margin: 0; color: var(--ink); font-size: 16px; font-weight: 600; line-height: 1.45; }
 .coach.is-hl .coach__box { animation: coach-hl 1.2s ease-out; }
-@keyframes coach-hl { 0%, 60% { box-shadow: 0 0 0 3px var(--ok), 0 0 24px -4px var(--ok); } 100% { box-shadow: none; } }
-.crit__coach { display: grid; gap: 8px; justify-items: start; margin-top: 10px; padding: 10px 14px; border: 1px solid var(--ok-line); border-radius: var(--r-md, 12px); background: var(--ok-bg); }
-.crit__coach b { font-size: var(--fs-12, 12px); color: var(--ink-3); font-weight: 600; }
+@keyframes coach-hl { 0%, 60% { box-shadow: 0 0 0 4px var(--ok), 0 0 32px -2px var(--ok); } 100% { box-shadow: none; } }
+a.coach-chip { cursor: pointer; font-weight: 700; color: var(--ok); border-color: var(--ok-line); background: var(--ok-bg); }
+.crit__coach { display: grid; gap: 8px; justify-items: start; margin-top: 10px; padding: 12px 16px; border: 2px solid var(--ok); border-radius: var(--r-md, 12px); background: var(--ok-bg); }
+.crit__coach b { font-size: 13px; color: var(--ok); font-weight: 700; }
+.crit__coach span { font-size: 15px; font-weight: 600; color: var(--ink); }
+
+/* ИИ-коуч: карточка с аватаром над оценкой */
+.coachcard { display: grid; gap: 12px; padding: var(--s-5, 20px); border: 1.5px solid var(--ok-line); background: linear-gradient(160deg, color-mix(in oklab, var(--ok) 16%, transparent), transparent 70%); }
+.coachcard__head { display: flex; align-items: center; gap: 12px; }
+.coachcard__avatar { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #52F29C, #12B981); box-shadow: 0 0 0 4px color-mix(in oklab, var(--ok) 22%, transparent), 0 6px 18px -6px var(--ok); }
+.coachcard__avatar .icon { width: 24px; height: 24px; stroke: #02160B; fill: none; }
+.coachcard__name { margin: 0; font-weight: 800; font-size: 17px; color: var(--ink); }
+.coachcard__role { margin: 0; font-size: 12px; color: var(--ink-3); }
+.coachcard__say { margin: 0; padding: 12px 14px; border-radius: 4px var(--r-lg) var(--r-lg) var(--r-lg); background: var(--ok-bg); color: var(--ink); line-height: 1.5; }
+.coachcard__tip { display: grid; gap: 6px; padding: 12px 14px; border-radius: var(--r-md, 12px); border: 1px solid var(--line); background: color-mix(in oklab, var(--ink) 4%, transparent); justify-items: start; }
+.coachcard__tiphead { display: flex; gap: 8px; align-items: center; justify-content: space-between; width: 100%; }
+.coachcard__tip p { margin: 0; line-height: 1.45; }
+.coachcard__tip p span { display: inline-block; min-width: 76px; margin-right: 6px; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.coachcard__was { color: var(--ink-3); } .coachcard__was span { color: var(--bad); }
+.coachcard__should { color: var(--ink); font-weight: 700; } .coachcard__should span { color: var(--ok); }
+.coachcard__none { margin: 0; color: var(--ink-2); font-size: 14px; }
