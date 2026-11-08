@@ -175,3 +175,17 @@ def test_stopped_job_does_not_call_model(client, monkeypatch):
     j = client.get(f"/api/jobs/{job['job_id']}").json()
     assert j["status"] == "done" and j["total"] == 0
     assert client.post("/api/jobs/9999/stop").status_code == 404
+
+
+def test_na_evidence_required_when_enabled(monkeypatch):
+    items = good()
+    monkeypatch.setattr(config, "NA_EVIDENCE", True)
+    _, errors = validate(json.dumps({"results": items}), CONV, SEED)
+    assert any(e.startswith("c02: для NA") for e in errors) and any(e.startswith("c03: для NA") for e in errors)
+    items[1] = item("c02", "NA", [("u1", "тариф қайда")])
+    items[2] = item("c03", "NA", [("u1", "тариф қайда")])
+    results, errors = validate(json.dumps({"results": items}), CONV, SEED)
+    assert errors == [] and results[1]["evidence"][0]["id"] == "u1"
+    monkeypatch.setattr(config, "NA_EVIDENCE", False)
+    _, errors = validate(json.dumps({"results": good()}), CONV, SEED)
+    assert errors == []

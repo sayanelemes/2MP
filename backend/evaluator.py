@@ -12,7 +12,7 @@ from . import config, db, llm, prompts, validator
 # версия в ключе кэша учитывает режимы: результат другого режима не подменяет этот
 PROMPT_VERSION = (
     prompts.PROMPT_VERSION + ("-sections" if config.EVAL_MODE == "sections" else "") + ("-recheck" if config.CRITICAL_RECHECK else "")
-    + ("" if config.PROMPT_FACTS else "-nofacts") + ("" if config.QUOTE_RETRY else "-noretry"))
+    + ("" if config.PROMPT_FACTS else "-nofacts") + ("" if config.QUOTE_RETRY else "-noretry") + ("-naev" if config.NA_EVIDENCE else ""))
 RETRIES = 3
 _stub = None
 

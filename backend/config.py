@@ -31,6 +31,8 @@ PROMPT_FACTS = os.environ.get("PROMPT_FACTS", "true").strip().lower() not in ("0
 EVAL_MODE = os.environ.get("EVAL_MODE", "single").strip().lower()
 # отдельный запрос по грубым нарушениям: yes, если нашла любая проверка с подтверждённой цитатой оператора
 CRITICAL_RECHECK = os.environ.get("CRITICAL_RECHECK", "").strip().lower() in ("1", "true", "yes")
+# для NA нужна реплика-доказательство в evidence, иначе один повтор с текстом ошибки
+NA_EVIDENCE = os.environ.get("NA_EVIDENCE", "").strip().lower() in ("1", "true", "yes")
 # один повтор, если у yes или балла шкалы все цитаты не найдены в тексте реплик
 QUOTE_RETRY = os.environ.get("QUOTE_RETRY", "true").strip().lower() not in ("0", "false", "no")
 FRONTEND_DIR = ROOT / "frontend"

@@ -3,6 +3,8 @@ import json
 import re
 import unicodedata
 
+from . import config
+
 
 def _norm(text):
     text = unicodedata.normalize("NFKC", text or "").lower()
@@ -126,6 +128,9 @@ def validate(raw_text, conversation, checklist):
         else:
             checked = None
 
+        if answer == "NA" and config.NA_EVIDENCE and not evidence:
+            errors.append(f"{cid}: для NA укажи в evidence реплику, показывающую условие неприменимости"
+                          " (например, первую реплику клиента)")
         if answer == "yes" and not any(transcript[index[e["id"]]]["speaker"] in ("operator", "system")
                                        for e in evidence):
             errors.append(f"{cid}: для yes нужна реплика оператора или системное сообщение в evidence")
