@@ -43,16 +43,16 @@
   function setupUpload() {
     const box = $(".steps details .stack"), group = $("#group", box);
     group.value = "MYSET";
-    $("#api", box).closest(".field").hidden = true;
-    $(".field__hint", box).textContent = "Файл: одна запись, массив записей или ответ API. Он попадёт в группу с этим именем, DEV не изменится.";
+    const api = $("#api", box); api.value = ""; api.placeholder = "https://…api.powerplatform.com/… (можно пусто, тогда адрес из настроек сервера)";
+    $(".field__hint", box).textContent = "Ссылку из письма организаторов можно вставить сюда, она уходит на сервер только для этого запроса и не сохраняется. Либо файл JSON: одна запись, массив записей или ответ API.";
     const [apiBtn, fileLabel] = $$(".row > *", box), input = $("input[type=file]", fileLabel);
     const go = async (fn) => {
       const g = group.value.trim();
       if (!g) return CQA.fail($(".page"), new Error("Укажите group_id"));
       try { await fn(g); location.href = `run.html?g=${encodeURIComponent(g)}`; } catch (e) { CQA.fail($(".page"), e); }
     };
-    apiBtn.textContent = "Загрузить по API (адрес из .env)";
-    apiBtn.addEventListener("click", () => go((g) => CQA.api.post("/api/datasets/import", { group_id: g })));
+    apiBtn.textContent = "Загрузить по API";
+    apiBtn.addEventListener("click", () => go((g) => CQA.api.post("/api/datasets/import", { group_id: g, ...(api.value.trim() ? { api_url: api.value.trim() } : {}) })));
     input.addEventListener("change", () => input.files[0] && go(async (g) => {
       let body; try { body = JSON.parse(await input.files[0].text()); } catch { throw new Error("Файл — не JSON"); }
       await CQA.api.post(`/api/conversations/upload?group_id=${encodeURIComponent(g)}`, body);

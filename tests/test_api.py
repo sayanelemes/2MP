@@ -145,3 +145,21 @@ def test_mock_evaluator_and_cache(client):
     ev = client.get(f"/api/evaluations/{client.get('/api/conversations?group_id=G').json()[0]['evaluation_id']}").json()
     assert ev["model"] == "mock" and len(ev["results"]) == 8
     assert all(e["id"] in ("u1", "u2", "u3") for r in ev["results"] for e in r["evidence"])
+
+
+def test_import_accepts_request_url_only_for_organizer_host(client, monkeypatch):
+    from backend import datasets
+    seen = []
+
+    class Resp:
+        status_code = 200
+        def raise_for_status(self): pass
+        def json(self): return {"isSuccess": True, "data": {"records": [_record()], "total_records": 1}}
+
+    monkeypatch.setattr(datasets.httpx, "get", lambda url, timeout: seen.append(url) or Resp())
+    good = "https://x.a5.environment.api.powerplatform.com/run?sig=S&group_id=DEV"
+    r = client.post("/api/datasets/import", json={"group_id": "NEW", "api_url": good})
+    assert r.status_code == 200 and seen == ["https://x.a5.environment.api.powerplatform.com/run?sig=S&group_id=NEW"]
+    for bad in ("http://x.api.powerplatform.com/run", "https://evil.example.com/run", "https://api.powerplatform.com.evil.com/run"):
+        assert client.post("/api/datasets/import", json={"group_id": "NEW", "api_url": bad}).status_code == 422
+    assert len(seen) == 1

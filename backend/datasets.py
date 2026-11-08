@@ -5,7 +5,7 @@ import re
 from contextlib import closing
 from datetime import datetime
 from decimal import ROUND_HALF_UP, Decimal
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 import httpx
 from fastapi import HTTPException
@@ -107,17 +107,25 @@ def save_records(group_id, records):
     return len(normalized)
 
 
-def api_url(group_id):
-    if not config.CQA_API_URL:
+ALLOWED_API_HOSTS = (".api.powerplatform.com",)  # адрес из тела запроса: только API организаторов, иначе сервер станет прокси к любому адресу
+
+
+def api_url(group_id, base=None):
+    base = (base or "").strip() or config.CQA_API_URL
+    if not base:
         raise HTTPException(500, "CQA_API_URL не задан в .env")
+    if base is not config.CQA_API_URL:
+        parts = urlsplit(base)
+        if parts.scheme != "https" or not (parts.hostname or "").endswith(ALLOWED_API_HOSTS):
+            raise HTTPException(422, "Адрес API должен быть https-ссылкой организаторов (…api.powerplatform.com)")
     value = "group_id=" + quote(group_id, safe="")
-    url, n = re.subn(r"(?<=[?&])group_id=[^&]*", lambda _: value, config.CQA_API_URL)
+    url, n = re.subn(r"(?<=[?&])group_id=[^&]*", lambda _: value, base)
     return url if n else url + ("&" if "?" in url else "?") + value
 
 
-def import_group(group_id):
+def import_group(group_id, base_url=None):
     try:
-        resp = httpx.get(api_url(group_id), timeout=60)
+        resp = httpx.get(api_url(group_id, base_url), timeout=60)
         resp.raise_for_status()
         payload = resp.json()
     except httpx.HTTPStatusError as e:

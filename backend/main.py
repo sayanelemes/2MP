@@ -34,6 +34,7 @@ async def validation_error(request, exc):
 
 class ImportIn(BaseModel):
     group_id: str
+    api_url: str | None = None  # ссылка с подписью можно передать с формы: без правки переменных окружения
 
 
 class EvaluationsIn(BaseModel):
@@ -73,7 +74,7 @@ class DecisionIn(BaseModel):
 
 @app.post("/api/datasets/import")
 def import_dataset(body: ImportIn):
-    return datasets.import_group(body.group_id.strip())
+    return datasets.import_group(body.group_id.strip(), body.api_url)
 
 
 @app.post("/api/conversations/upload")
