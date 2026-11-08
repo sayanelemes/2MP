@@ -163,3 +163,20 @@ def test_import_accepts_request_url_only_for_organizer_host(client, monkeypatch)
     for bad in ("http://x.api.powerplatform.com/run", "https://evil.example.com/run", "https://api.powerplatform.com.evil.com/run"):
         assert client.post("/api/datasets/import", json={"group_id": "NEW", "api_url": bad}).status_code == 422
     assert len(seen) == 1
+
+
+def test_import_cleans_pasted_url_and_explains_404(client, monkeypatch):
+    from backend import datasets
+    import httpx
+    seen = []
+
+    class Resp:
+        status_code = 404
+        def raise_for_status(self):
+            raise httpx.HTTPStatusError("x", request=None, response=self)
+
+    monkeypatch.setattr(datasets.httpx, "get", lambda url, timeout: seen.append(url) or Resp())
+    pasted = '  "https://x.api.powerplatform.com/run?sig=S&group_id=DEV"\n'
+    r = client.post("/api/datasets/import", json={"group_id": "MYSET", "api_url": pasted})
+    assert seen == ["https://x.api.powerplatform.com/run?sig=S&group_id=MYSET"]
+    assert r.status_code == 502 and "DEV, FBroker или Swap" in r.json()["detail"] and "S&" not in r.json()["detail"]

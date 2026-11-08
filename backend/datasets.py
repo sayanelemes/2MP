@@ -111,7 +111,8 @@ ALLOWED_API_HOSTS = (".api.powerplatform.com",)  # адрес из тела за
 
 
 def api_url(group_id, base=None):
-    base = (base or "").strip() or config.CQA_API_URL
+    found = re.search(r"https?://[^\s\"'<>]+", base or "")  # вставку с кавычками, пробелами, переносами и лишним текстом чистим
+    base = (found.group(0) if found else (base or "").strip()) or config.CQA_API_URL
     if not base:
         raise HTTPException(500, "CQA_API_URL не задан в .env")
     if base is not config.CQA_API_URL:
@@ -129,7 +130,9 @@ def import_group(group_id, base_url=None):
         resp.raise_for_status()
         payload = resp.json()
     except httpx.HTTPStatusError as e:
-        raise HTTPException(502, f"API ответило {e.response.status_code}")  # без адреса: в нём подпись
+        code = e.response.status_code  # без адреса в тексте: в нём подпись
+        hint = f": у организаторов нет набора group_id={group_id!r}, используйте DEV, FBroker или Swap" if code == 404 else ""
+        raise HTTPException(502, f"API ответило {code}{hint}")
     except (httpx.HTTPError, ValueError) as e:
         raise HTTPException(502, f"API недоступно: {type(e).__name__}")
     records = extract_records(payload)

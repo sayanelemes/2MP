@@ -42,7 +42,8 @@
   // Загрузка своего набора: файл уходит в новую группу, затем открывается эта группа.
   function setupUpload() {
     const box = $(".steps details .stack"), group = $("#group", box);
-    group.value = "MYSET";
+    group.value = "DEV"; group.setAttribute("list", "cqa-groups");
+    group.insertAdjacentHTML("afterend", '<datalist id="cqa-groups"><option value="DEV"><option value="FBroker"><option value="Swap"></datalist>');
     const api = $("#api", box); api.value = ""; api.placeholder = "https://…api.powerplatform.com/… (можно пусто, тогда адрес из настроек сервера)";
     $(".field__hint", box).textContent = "Ссылку из письма организаторов можно вставить сюда, она уходит на сервер только для этого запроса и не сохраняется. Либо файл JSON: одна запись, массив записей или ответ API.";
     const [apiBtn, fileLabel] = $$(".row > *", box), input = $("input[type=file]", fileLabel);
