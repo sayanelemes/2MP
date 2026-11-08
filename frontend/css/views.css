@@ -698,7 +698,7 @@ a.coach-chip { cursor: pointer; font-weight: 700; color: var(--ok); border-color
 .crit__coach b { font-size: 13px; color: var(--ok); font-weight: 700; }
 .crit__coach span { font-size: 15px; font-weight: 600; color: var(--ink); }
 
-/* ИИ-коуч: карточка с аватаром над оценкой */
+/* ИИ-помощник: карточка с аватаром над оценкой */
 .coachcard { display: grid; gap: 12px; padding: var(--s-5, 20px); border: 1.5px solid var(--ok-line); background: linear-gradient(160deg, color-mix(in oklab, var(--ok) 16%, transparent), transparent 70%); }
 .coachcard__head { display: flex; align-items: center; gap: 12px; }
 .coachcard__avatar { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #52F29C, #12B981); box-shadow: 0 0 0 4px color-mix(in oklab, var(--ok) 22%, transparent), 0 6px 18px -6px var(--ok); }

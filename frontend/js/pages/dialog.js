@@ -35,7 +35,7 @@
     });
     return out;
   }
-  const coachHtml = (r) => `<li class="coach" id="coach-${r.criterion_id}" role="note" aria-label="Подсказка ИИ-коуча: как надо было сказать"><div class="coach__box"><div class="coach__head"><span class="coach__badge">✨ ИИ-коуч</span> Как надо было сказать · ${E(r.title)}</div><p class="coach__text">«${E(r.suggestion)}»</p></div></li>`;
+  const coachHtml = (r) => `<li class="coach" id="coach-${r.criterion_id}" role="note" aria-label="Подсказка ИИ-помощника: как надо было сказать"><div class="coach__box"><div class="coach__head"><span class="coach__badge">✨ ИИ-помощник</span> Как надо было сказать · ${E(r.title)}</div><p class="coach__text">«${E(r.suggestion)}»</p></div></li>`;
 
   function transcriptHtml() {
     const marks = marksFor(), coach = coachAnchors();
@@ -76,7 +76,7 @@
     const kind = r.is_critical ? "violation" : r.final_answer === "no" ? "violation" : "support";
     const evidence = (r.evidence || []).map((e) => { const n = turnNo(e.id); return `<a class="evidence__item evidence__item--${kind}" href="#t-${n}"><span class="turn-ref">#${n}</span><span><span class="evidence__quote">${E(e.quote)}</span>${e.verified === false ? '<span class="evidence__note">цитата не найдена в тексте</span>' : ""}</span></a>`; }).join("");
     const box = appeals.map((a) => `<div class="appeal-box"><div class="appeal-box__head">${ICON("scale", "icon--sm")}Апелляция оператора<span class="tiny">${dt(a.created_at)}</span></div><p>«${E(a.comment)}»</p>${a.status === "resolved" ? `<div class="appeal-box__head appeal-box__head--ok">${ICON("check-circle", "icon--sm")}Проверяющий: ${a.decision === "changed" ? "оценка изменена" : "оценка подтверждена"}<span class="tiny">${dt(a.decided_at)}</span></div><p>${E(a.decision_reason || "")}</p>` : `<div class="appeal-box__head">${ICON("clock", "icon--sm")}Ждёт решения проверяющего</div>`}</div>`).join("");
-    const coach = coachOf(r) ? `<div class="crit__coach"><b><span class="coach__badge">✨ ИИ-коуч</span> Как надо было сказать</b><span>«${E(r.suggestion)}»</span><button class="btn btn--ghost btn--sm" type="button" data-coach="${r.criterion_id}">Показать в разговоре</button></div>` : "";
+    const coach = coachOf(r) ? `<div class="crit__coach"><b><span class="coach__badge">✨ ИИ-помощник</span> Как надо было сказать</b><span>«${E(r.suggestion)}»</span><button class="btn btn--ghost btn--sm" type="button" data-coach="${r.criterion_id}">Показать в разговоре</button></div>` : "";
     const naBox = r.final_answer === "NA" && c.na_condition ? `<div class="crit__na">${ICON("info", "icon--sm")}<span><b>Условие N/A:</b> ${E(c.na_condition)}</span></div>` : "";
     const foot = r.is_critical || r.final_answer === "NA" || !ev.id ? "" : `<div class="crit__foot"><span class="spacer"></span><a class="btn btn--ghost btn--sm" href="#appeal-modal" data-crit="${r.criterion_id}">${ICON("scale")}Оспорить</a></div>`;
     return `<article class="card spot crit crit--${critClass(r)}" id="c-${code}"><span class="crit__bar" aria-hidden="true"></span>
@@ -85,7 +85,7 @@
   }
 
 
-  // Карточка ИИ-коуча над оценкой: сводка потерь и «было → надо было». Готовые данные, новых запросов к ИИ нет.
+  // Карточка ИИ-помощника над оценкой: сводка потерь и «было → надо было». Готовые данные, новых запросов к ИИ нет.
   function coachCard() {
     const rs = ev.results.filter((r) => !r.is_critical && r.final_answer !== "NA");
     const loss = (r) => Math.max(0, r.effective_weight - r.points);
@@ -97,9 +97,9 @@
     else {
       say = `Разобрал разговор: потеряно <b>${N(total)}</b> из 100 баллов по ${lossy.length} ${CQA.plural(lossy.length, "критерию", "критериям", "критериям")}. Больше всего баллов ушло на «${E(lossy[0].title)}» (−${N(loss(lossy[0]))}).`;
       body = tips.length ? tips.map((r) => `<div class="coachcard__tip"><div class="coachcard__tiphead"><b>${r.criterion_id.slice(1)} ${E(r.title)}</b><span class="tag tag--bad">−${N(loss(r))}</span></div>${opQuote(r) ? `<p class="coachcard__was"><span>Было</span>«${E(opQuote(r))}»</p>` : ""}<p class="coachcard__should"><span>Надо было</span>«${E(r.suggestion)}»</p><button class="btn btn--ghost btn--sm" type="button" data-coach="${r.criterion_id}">Показать в разговоре</button></div>`).join("")
-        : `<p class="coachcard__none">Готовых фраз для этого диалога нет: он оценён без подсказок. <a href="run.html?ids=${encodeURIComponent(conv.conversation_id)}">Переоценить с ИИ-коучем</a></p>`;
+        : `<p class="coachcard__none">Готовых фраз для этого диалога нет: он оценён без подсказок. <a href="run.html?ids=${encodeURIComponent(conv.conversation_id)}">Переоценить с ИИ-помощникем</a></p>`;
     }
-    return `<section class="card spot coachcard" aria-label="ИИ-коуч" style="--i:0"><div class="coachcard__head"><span class="coachcard__avatar" aria-hidden="true">${ICON("sparkles")}</span><div><p class="coachcard__name">ИИ-коуч</p><p class="coachcard__role">помощник оператора</p></div></div><p class="coachcard__say">${say}</p>${body}</section>`;
+    return `<section class="card spot coachcard" aria-label="ИИ-помощник" style="--i:0"><div class="coachcard__head"><span class="coachcard__avatar" aria-hidden="true">${ICON("sparkles")}</span><div><p class="coachcard__name">ИИ-помощник</p><p class="coachcard__role">помощник оператора</p></div></div><p class="coachcard__say">${say}</p>${body}</section>`;
   }
 
   function panelHtml() {
@@ -230,7 +230,7 @@
     $(".cmdbar__crumbs [aria-current]").textContent = id;
     const call = CQA.isCall(conv);
     const first = conv.transcript.find((u) => u.speaker === "client");
-    $(".meta-row").innerHTML = `${CQA.channelTag(conv)}${CQA.langTag(conv.language)}${call ? `<span class="tag tag--amber">${ICON("mic")}Транскрипт ASR</span>` : ""}<span class="tag">${conv.transcript.length} реплик</span><span class="tag">${ICON("clock")}${CQA.mmss(conv.duration)}</span>${ev ? `<span class="tag">${ICON("checklist")}${E(ev.checklist_name)} v${ev.checklist_version}</span>` : ""}${coachCount() ? `<a class="tag coach-chip" href="#" data-first-coach>✨ ИИ-коуч: ${coachCount()} ${CQA.plural(coachCount(), "подсказка", "подсказки", "подсказок")}</a>` : ""}`;
+    $(".meta-row").innerHTML = `${CQA.channelTag(conv)}${CQA.langTag(conv.language)}${call ? `<span class="tag tag--amber">${ICON("mic")}Транскрипт ASR</span>` : ""}<span class="tag">${conv.transcript.length} реплик</span><span class="tag">${ICON("clock")}${CQA.mmss(conv.duration)}</span>${ev ? `<span class="tag">${ICON("checklist")}${E(ev.checklist_name)} v${ev.checklist_version}</span>` : ""}${coachCount() ? `<a class="tag coach-chip" href="#" data-first-coach>✨ ИИ-помощник: ${coachCount()} ${CQA.plural(coachCount(), "подсказка", "подсказки", "подсказок")}</a>` : ""}`;
     const h1 = $(".dlg-id"); h1.removeAttribute("data-decrypt"); h1.textContent = id;
     $(".hero .lead").textContent = first ? first.text : "";
     const [again, appeal] = $$(".hero__actions .btn");
