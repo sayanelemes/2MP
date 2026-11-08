@@ -3,23 +3,25 @@
   "group_id": "DEV",
   "conversation_id": "p1-ru-001",
   "holdout": false,
-  "example": true,
   "answers": {
    "c01": "yes",
    "c02": "NA",
    "c03": "NA",
-   "c04": 15,
+   "c04": 20,
    "c05": "yes",
    "c06": 10,
-   "c07": "no",
+   "c07": "yes",
    "c08": "no"
-  }
+  },
+  "uncertain": [
+   "c07"
+  ],
+  "note": "Эталонный диалог. Прощание без итога после того, как клиент подтвердил решение."
  },
  {
   "group_id": "DEV",
-  "conversation_id": "p1-ru-030",
-  "holdout": true,
-  "example": true,
+  "conversation_id": "p1-ru-002",
+  "holdout": false,
   "answers": {
    "c01": "yes",
    "c02": "yes",
@@ -29,7 +31,1053 @@
    "c06": 10,
    "c07": "yes",
    "c08": "no"
-  }
+  },
+  "uncertain": [],
+  "note": "Данные счёта не раскрывались, клиент отказался от идентификации."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-003",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 10,
+   "c05": "yes",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c02",
+   "c06",
+   "c07"
+  ],
+  "note": "Вопрос о комиссии проигнорирован дважды."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-004",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c02"
+  ],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-005",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 15,
+   "c05": "yes",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c04",
+   "c06"
+  ],
+  "note": "Невнятный путь, клиент переспросил. Не сказано, берёт ли комиссию брокер."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-006",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Идентификация до проверки счёта."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-007",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 10,
+   "c05": "yes",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c06",
+   "c07"
+  ],
+  "note": "Вопрос о повторном выводе проигнорирован."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-008",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-009",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "no",
+   "c04": 5,
+   "c05": "no",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c04",
+   "c08"
+  ],
+  "note": "Ограничение по счёту раскрыто без идентификации. c08 = раскрытие конфиденциальной информации, если организаторы так считают."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-010",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Длинный эталонный диалог."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-011",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-012",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "NA",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Соединение прервано до завершения."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-013",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-014",
+  "holdout": false,
+  "answers": {
+   "c01": "no",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c05",
+   "c06"
+  ],
+  "note": "«Привет» без имени, переспросил уже известное."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-015",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-016",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c04",
+   "c05"
+  ],
+  "note": "Совет без уточнения, «Ну, тогда сайт», в итоге верный ответ."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-017",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-018",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 0,
+   "c05": "no",
+   "c06": 4,
+   "c07": "no",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c06"
+  ],
+  "note": "Безосновательный ответ, «Тогда не знаю», оператор закрыл чат."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-019",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-020",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-021",
+  "holdout": true,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-022",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 0,
+   "c05": "no",
+   "c06": 10,
+   "c07": "no",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c02",
+   "c06"
+  ],
+  "note": "Предложение перевести деньги лично оператору. Оператор закрыл чат."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-023",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c05"
+  ],
+  "note": "Просит личный номер для платной частной консультации."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-024",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-025",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": "NA",
+   "c05": "yes",
+   "c06": 10,
+   "c07": "NA",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Клиент ушёл до формулировки запроса: пример N/A для защиты."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-026",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 0,
+   "c05": "no",
+   "c06": 4,
+   "c07": "no",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Проигнорировал запрос выше, «Всё есть в приложении», закрыл чат."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-027",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-028",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Предупредил об ожидании и поблагодарил."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-029",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "no",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c06",
+   "c07"
+  ],
+  "note": "Оскорбление клиента."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-ru-030",
+  "holdout": true,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-001",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c07"
+  ],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-002",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-003",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-004",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-005",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 4,
+   "c07": "no",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c04",
+   "c06"
+  ],
+  "note": "Сначала неверный путь, клиент поправил. В конце только «Жақсы» без прощания."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-006",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-007",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-008",
+  "holdout": false,
+  "answers": {
+   "c01": "no",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 7,
+   "c07": "no",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c06",
+   "c07"
+  ],
+  "note": "«Сәлем» без имени, переспросил известное, не попрощался."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-009",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-010",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-011",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "NA",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Связь с клиентом прервалась."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-012",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-013",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "no",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c05"
+  ],
+  "note": "Платная частная консультация по личному номеру, оператор закрыл чат."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-014",
+  "holdout": true,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-kz-015",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "no",
+   "c04": 5,
+   "c05": "no",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c04",
+   "c07",
+   "c08"
+  ],
+  "note": "Раскрытие ограничения без идентификации."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-001",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-002",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-003",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-004",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-005",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-006",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "yes",
+   "c03": "yes",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-007",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 10,
+   "c05": "yes",
+   "c06": 7,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c06",
+   "c07"
+  ],
+  "note": "Вопрос о повторном выводе проигнорирован."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-008",
+  "holdout": true,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-009",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "NA",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": "Связь с клиентом прервалась."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-010",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-011",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-012",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [],
+  "note": ""
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-013",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "NA",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 10,
+   "c07": "no",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c05"
+  ],
+  "note": "Платная частная консультация по личному номеру, оператор закрыл чат."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-014",
+  "holdout": false,
+  "answers": {
+   "c01": "yes",
+   "c02": "no",
+   "c03": "no",
+   "c04": 5,
+   "c05": "no",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "yes"
+  },
+  "uncertain": [
+   "c04",
+   "c07",
+   "c08"
+  ],
+  "note": "Раскрытие ограничения без идентификации, вопрос клиента проигнорирован."
+ },
+ {
+  "group_id": "DEV",
+  "conversation_id": "p1-en-015",
+  "holdout": false,
+  "answers": {
+   "c01": "no",
+   "c02": "no",
+   "c03": "NA",
+   "c04": 20,
+   "c05": "yes",
+   "c06": 4,
+   "c07": "yes",
+   "c08": "no"
+  },
+  "uncertain": [
+   "c04",
+   "c05",
+   "c07"
+  ],
+  "note": "Без приветствия и имени, сначала неверный совет."
  },
  {
   "group_id": "TEST",
@@ -348,58 +1396,5 @@
    "c07"
   ],
   "note": "Просит перевести деньги на личную карту."
- },
- {
-  "group_id": "TEST",
-  "conversation_id": "t-call-01",
-  "holdout": false,
-  "answers": {
-   "c01": "yes",
-   "c02": "NA",
-   "c03": "yes",
-   "c04": 20,
-   "c05": "yes",
-   "c06": 10,
-   "c07": "yes",
-   "c08": "no"
-  },
-  "uncertain": [],
-  "note": "Звонок-эталон: идентификация по коду, предупредил об удержании."
- },
- {
-  "group_id": "TEST",
-  "conversation_id": "t-call-02",
-  "holdout": false,
-  "answers": {
-   "c01": "no",
-   "c02": "NA",
-   "c03": "NA",
-   "c04": 20,
-   "c05": "no",
-   "c06": 7,
-   "c07": "yes",
-   "c08": "no"
-  },
-  "uncertain": [
-   "c07"
-  ],
-  "note": "Не представился, удержание больше 3 минут без предупреждения, проигнорировал недовольство."
- },
- {
-  "group_id": "TEST",
-  "conversation_id": "t-call-03",
-  "holdout": false,
-  "answers": {
-   "c01": "yes",
-   "c02": "NA",
-   "c03": "NA",
-   "c04": 20,
-   "c05": "yes",
-   "c06": 10,
-   "c07": "yes",
-   "c08": "no"
-  },
-  "uncertain": [],
-  "note": "Много ошибок распознавания: за них не штрафуем."
  }
 ]

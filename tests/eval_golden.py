@@ -90,8 +90,9 @@ if __name__ == "__main__":
     ap.add_argument("--group", default="DEV")
     ap.add_argument("--checklist", default="chat-quality")
     ap.add_argument("--holdout", action="store_true", help="только отложенные диалоги")
+    ap.add_argument("--golden", default=str(GOLDEN), help="файл разметки (по умолчанию tests/golden.json)")
     a = ap.parse_args()
-    rep = report(a.group, a.checklist, a.holdout)
+    rep = report(a.group, a.checklist, a.holdout, json.loads(Path(a.golden).read_text(encoding="utf-8")))
     (ROOT / "eval_report.json").write_text(json.dumps(rep, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({k: v for k, v in rep.items() if k != "mismatches"}, ensure_ascii=False, indent=2))
     for m in rep["mismatches"]:
